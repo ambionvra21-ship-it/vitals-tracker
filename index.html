@@ -9,142 +9,147 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2563EB">
-    <link rel="manifest" href="data:application/json;base64,ewogICJhbWUiOiAiVml0YWxzVHJhY2tlciBQcm8iLCogICJzaG9ydF9uYW1lIjogIlZpdGFsc1RyYWNrZXIiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI0Y5RkFGIiwKICAidGhlbWVfY29sb3IiOiAiIzI1NjNFQiIKfQ==">
 
-    <!-- Tailwind CSS Standard Stylesheet (Using JSDelivr direct network fallback link) -->
-    <link href="https://jsdelivr.net" rel="stylesheet">
-    <!-- Chart.js for analytics -->
+    <!-- Standalone CSS Style Backup Override (Fixes the raw unstyled white screen issue) -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f3f4f6; margin: 0; padding-bottom: 80px; color: #1f2937; }
+        nav { background-color: #2563eb; color: white; padding: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); font-size: 20px; font-weight: bold; text-align: center; }
+        main { max-width: 800px; margin: 0 auto; padding: 15px; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; id: card; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
+        h2 { margin-top: 0; font-size: 18px; color: #111827; border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; }
+        label { display: block; font-size: 12px; font-weight: 600; color: #4b5563; margin-top: 10px; margin-bottom: 4px; }
+        input { width: 95%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background-color: #fff; }
+        button { width: 100%; padding: 12px; margin-top: 12px; background-color: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        button:hover { opacity: 0.9; }
+        .grid-3 { display: grid; grid-template-cols: 1fr 1fr 1fr; gap: 8px; }
+        .grid-2 { display: grid; grid-template-cols: 1fr 1fr; gap: 8px; }
+        .tier-btn { background-color: #e5e7eb; color: #374151; padding: 8px; margin-top: 5px; font-size: 12px; }
+        .streak-box { background-color: #f9fafb; padding: 15px; border-radius: 8px; text-align: center; margin-top: 10px; border: 1px solid #f3f4f6; }
+        .progress-bg { width: 100%; background-color: #e5e7eb; border-radius: 9999px; height: 10px; margin-top: 10px; overflow: hidden; }
+        .progress-bar { background: linear-gradient(90deg, #fbbf24, #f59e0b); height: 100%; width: 0%; transition: width 0.3s ease; }
+        .chart-container { position: relative; height: 260px; width: 100%; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        th { background-color: #f9fafb; color: #6b7280; font-size: 11px; text-transform: uppercase; }
+        .footer-banner { background-color: #1f2937; color: #9ca3af; padding: 25px; font-size: 11px; text-align: center; margin-top: 40px; }
+        .share-btn { text-decoration: none; display: inline-block; padding: 10px; border-radius: 6px; color: white; font-weight: bold; font-size: 12px; text-align: center; margin-top: 5px; }
+    </style>
+    <!-- Chart.js framework execution library -->
     <script src="https://jsdelivr.net"></script>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800 pb-20">
+<body>
 
     <!-- Header Navigation -->
-    <nav class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-tight">❤️ VitalsTracker Pro</h1>
-            <span class="text-xs bg-blue-700 px-2 py-1 rounded-full border border-blue-400 font-mono">v1.3 Ultra</span>
+    <nav>❤️ VitalsTracker Pro</nav>
+
+    <main>
+        <!-- AdSense Top Banner -->
+        <div style="background-color:#e5e7eb; padding:10px; text-align:center; font-size:11px; color:#6b7280; border-radius:6px; margin-bottom:20px;">
+            [Google AdSense Mobile Smart Banner Advertisement Place]
         </div>
-    </nav>
 
-    <!-- Ad Space Top Banner -->
-    <div class="max-w-7xl mx-auto my-3 p-2 bg-gray-200 text-center text-xs text-gray-500 rounded border">
-        <!-- ADSENSE SLOT 1: Copy-paste your top banner ad code right here -->
-        [Google AdSense Mobile Smart Banner Advertisement]
-    </div>
+        <!-- 1. Mobile Shortcut Instructions Card -->
+        <div class="card" style="background: linear-gradient(135deg, #2563eb, #4f46e5); color: white;">
+            <h2 style="color: white; border-bottom: 1px solid rgba(255,255,255,0.2);">📱 Install as Mobile App</h2>
+            <p style="font-size: 12px; margin: 5px 0 10px 0;">Run this tracking platform layout full-screen on your phone:</p>
+            <div style="font-size: 11px; line-height: 1.5; opacity: 0.95;">
+                <p><strong>Android/Chrome:</strong> Tap the 3-dots panel menu ➔ Select "Add to Home Screen".</p>
+                <p><strong>iPhone/Safari:</strong> Tap the bottom Share icon ➔ Select "Add to Home Screen".</p>
+            </div>
+        </div>
 
-    <!-- Main Content Layout Grid -->
-    <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- COLUMN 1: Calculators, Challenges & Expenses -->
-        <div class="space-y-6">
-            
-            <!-- Mobile App Install Instructions -->
-            <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-5 rounded-xl shadow-lg text-white">
-                <h2 class="text-lg font-bold mb-1">📱 Install Mobile Shortcut</h2>
-                <p class="text-xs text-blue-100 mb-3">Add this app to your smartphone screen full-screen without an app store.</p>
-                <div class="text-xs border-t border-blue-500 pt-2 space-y-1">
-                    <p><strong>Android/Chrome:</strong> Tap the 3-dots ➔ Select "Add to Home Screen".</p>
-                    <p><strong>iPhone/Safari:</strong> Tap the Share icon ➔ Select "Add to Home Screen".</p>
+        <!-- 2. Streak Logging Challenge Card -->
+        <div class="card">
+            <h2 style="color:#d97706;">🏆 Multi-Tier Logging Challenge</h2>
+            <div class="grid-3">
+                <button onclick="setChallengeTier(30)" id="tierBtn30" class="tier-btn" style="background-color:#f59e0b; color:white;">30 Days</button>
+                <button onclick="setChallengeTier(60)" id="tierBtn60" class="tier-btn">60 Days</button>
+                <button onclick="setChallengeTier(90)" id="tierBtn90" class="tier-btn">90 Days</button>
+            </div>
+            <div class="streak-box">
+                <div style="font-size:12px; color:#6b7280; display:flex; justify-content:space-between;">
+                    <span>Current Habit Streak</span>
+                    <span>Target Goal</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:5px;">
+                    <span style="font-size:28px; font-weight:800; color:#f59e0b;" id="streakCount">0 <span style="font-size:14px; font-weight:400; color:#9ca3af;">days 🔥</span></span>
+                    <span style="font-size:14px; font-weight:700; color:#4b5563;" id="targetTierLabel">30 Days</span>
+                </div>
+                <div class="progress-bg">
+                    <div id="streakProgress" class="progress-bar"></div>
+                </div>
+                <p id="challengeMilestone" style="font-size:11px; color:#9ca3af; margin: 8px 0 0 0; font-style:italic;">Log entries daily to keep your habit streak alive.</p>
+            </div>
+        </div>
+
+        <!-- 3. Health Expenses Tracker Card -->
+        <div class="card">
+            <h2 style="color:#4f46e5;">💵 Health Expense Tracker</h2>
+            <label>Expense Description</label>
+            <input type="text" id="expLabel" placeholder="e.g., Blood Pressure Medication, Checkup">
+            <label>Cost Value</label>
+            <input type="number" id="expCost" placeholder="0.00">
+            <button onclick="logExpense()" style="background-color:#4f46e5;">Save Expense Item</button>
+            <div style="background-color:#eef2ff; padding:10px; border-radius:6px; text-align:center; margin-top:12px; border:1px solid #e0e7ff;">
+                <p style="margin:0; font-size:12px; font-weight:600; color:#374151;">Total Running Outlay: <span id="totalExpenseVal" style="font-size:15px; color:#4f46e5; font-weight:800;">$0.00</span></p>
+            </div>
+        </div>
+
+        <!-- 4. Calculator Fields Component Card -->
+        <div class="card">
+            <h2 style="color:#2563eb;">🧮 Compute Body Mass Index</h2>
+            <label>Weight (kg)</label>
+            <input type="number" id="weight" placeholder="e.g., 70">
+            <label>Height (cm)</label>
+            <input type="number" id="height" placeholder="e.g., 175">
+            <button onclick="calculateBMI()" style="background-color:#2563eb;">Calculate BMI</button>
+            <div id="bmiResult" style="margin-top:15px; padding:10px; background-color:#f9fafb; border-radius:6px; text-align:center; display:none;">
+                <p style="margin:0; font-size:14px;">Your BMI Score: <span id="bmiValue" style="font-weight:bold; font-size:16px;">0.0</span></p>
+                <p id="bmiStatus" style="margin:4px 0 0 0; font-size:12px; font-weight:bold;"></p>
+            </div>
+        </div>
+
+        <!-- 5. Vital Sign Intake Form Card -->
+        <div class="card">
+            <h2 style="color:#059669;">📝 Record Daily Vital Signs</h2>
+            <div class="grid-2">
+                <div>
+                    <label>BP Systolic (Top)</label>
+                    <input type="number" id="bpSys" placeholder="120">
+                </div>
+                <div>
+                    <label>BP Diastolic (Bottom)</label>
+                    <input type="number" id="bpDia" placeholder="80">
                 </div>
             </div>
+            <label>Blood Sugar (mg/dL)</label>
+            <input type="number" id="sugar" placeholder="95">
+            <label>Pulse Rate / Beats Per Minute</label>
+            <input type="number" id="pulse" placeholder="72">
+            <button onclick="logVitals()" style="background-color:#059669;">Save Daily Vitals</button>
+        </div>
 
-            <!-- Health Challenge Milestone Selector Tier System -->
-            <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                <h2 class="text-xl font-semibold text-yellow-600 mb-2">🏆 Multi-Tier Logging Challenge</h2>
-                <p class="text-xs text-gray-400 mb-4">Select your baseline goal to establish lifelong health habits.</p>
-                
-                <div class="grid grid-cols-3 gap-2 mb-4">
-                    <button onclick="setChallengeTier(30)" id="tierBtn30" class="py-1 px-2 rounded text-xs font-bold bg-yellow-500 text-white shadow-sm">30 Days</button>
-                    <button onclick="setChallengeTier(60)" id="tierBtn60" class="py-1 px-2 rounded text-xs font-bold bg-gray-200 text-gray-700 hover:bg-gray-300">60 Days</button>
-                    <button onclick="setChallengeTier(90)" id="tierBtn90" class="py-1 px-2 rounded text-xs font-bold bg-gray-200 text-gray-700 hover:bg-gray-300">90 Days</button>
-                </div>
+        <!-- 6. Alarm Configuration Form Card -->
+        <div class="card">
+            <h2 style="color:#7c3aed;">⏰ Medication Alarms & Reminders</h2>
+            <label>Reminder Label Note</label>
+            <input type="text" id="alarmLabel" placeholder="e.g., Morning Blood Sugar Test">
+            <label>Set Alarm Trigger Time</label>
+            <input type="time" id="alarmTime" style="width:90%;">
+            <button onclick="setAlarm()" style="background-color:#7c3aed;">Set Alarm Reminder</button>
+            <div id="activeAlarms" style="margin-top:12px;"></div>
+        </div>
 
-                <div class="bg-gray-50 p-4 rounded-lg text-center space-y-2">
-                    <div class="flex justify-between items-center text-xs font-semibold text-gray-500">
-                        <span>Current Streak</span>
-                        <span>Active Tier Goal</span>
-                    </div>
-                    <div class="flex justify-between items-baseline">
-                        <span class="text-3xl font-extrabold text-yellow-500" id="streakCount">0 <span class="text-sm font-normal text-gray-400 ml-1">days 🔥</span></span>
-                        <span class="text-sm font-bold text-gray-600" id="targetTierLabel">30 Days</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                        <div id="streakProgress" class="bg-gradient-to-r from-yellow-400 to-orange-500 h-2.5 rounded-full" style="width: 0%"></div>
-                    </div>
-                    <p id="challengeMilestone" class="text-xs italic text-gray-500 pt-1">Log health metrics to start.</p>
-                </div>
+        <!-- 7. Interactive Analytics Graphing Card (Chart.js Container) -->
+        <div class="card">
+            <h2>📊 Interactive Health Trends</h2>
+            <div class="chart-container">
+                <canvas id="healthChart"></canvas>
             </div>
+        </div>
 
-            <!-- Health Expense Tracking Hub -->
-            <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                <h2 class="text-xl font-semibold text-indigo-600 mb-4">💵 Health Expense Tracker</h2>
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500">Expense Item Label</label>
-                        <input type="text" id="expLabel" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="e.g. Insulin, Doctor Consultation">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500">Cost Value ($ or Local Currency)</label>
-                        <input type="number" id="expCost" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="e.g. 45.00">
-                    </div>
-                    <button onclick="logExpense()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition text-sm shadow-sm">Save Expense</button>
-                    
-                    <!-- Total Budget Alert Banner -->
-                    <div class="mt-3 p-2 bg-indigo-50 border border-indigo-100 rounded text-center">
-                        <p class="text-xs text-indigo-900 font-semibold">Total Month Outlay: <span id="totalExpenseVal" class="text-sm text-indigo-600 font-bold">$0.00</span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BMI Calculator Tool -->
-            <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                <h2 class="text-xl font-semibold text-blue-600 mb-4">🧮 Calculate BMI</h2>
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500">Weight (kg)</label>
-                        <input type="number" id="weight" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="70">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500">Height (cm)</label>
-                        <input type="number" id="height" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="175">
-                    </div>
-                    <button onclick="calculateBMI()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition text-sm shadow-sm">Compute BMI</button>
-                    <div id="bmiResult" class="mt-4 p-3 bg-gray-50 rounded-md text-center hidden">
-                        <p class="text-sm text-gray-600">Your BMI: <span id="bmiValue" class="font-bold text-lg text-gray-900">0.0</span></p>
-                        <p id="bmiStatus" class="text-xs font-semibold mt-1"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Vital Signs Logger Form -->
-            <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                <h2 class="text-xl font-semibold text-emerald-600 mb-4">📝 Log Vital Signs</h2>
-                <div class="space-y-3">
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-500">BP Systolic</label>
-                            <input type="number" id="bpSys" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="120">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-500">BP Diastolic</label>
-                            <input type="number" id="bpDia" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="80">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500">Blood Sugar (mg/dL)</label>
-                        <input type="number" id="sugar" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="95">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500">Pulse Rate (BPM)</label>
-                        <input type="number" id="pulse" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="72">
-                    </div>
-                    <button onclick="logVitals()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-md transition text-sm shadow-sm">Save Entry</button>
-                </div>
-            </div>
-
-            <!-- Health Reminders / Alarm System -->
-            <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                <h2 class="text-xl font-semibold text-purple-600 mb-4">⏰ Alarms & Reminders</h2>
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500">Reminder Label</label>
+        <!-- 8. Native Direct Social Share Widget Card -->
+        <div class="card">
+            <h2>📢 Share App with Community</h2>
+            <p style="font-size:12px; color:#6b7280; margin-bottom:12px;">Share this private vital tracker with friends and family:</p>
+            <div class="grid-2">
