@@ -28,20 +28,18 @@ function addWater(amount) {
     totalWaterLogged += amount;
     localStorage.setItem('waterToday', totalWaterLogged);
     const element = document.getElementById('totalWaterLabel');
-    if(element) element.innerText = `${totalWaterLogged} ml`;
+    if(element) element.innerText = totalWaterLogged + " ml";
 }
 
 // 3. Nutrition Operations
 function logDiet() {
-    const label = document.getElementById('dietLabel')?.value || "Meal Entry";
     const kcal = parseInt(document.getElementById('dietKcal')?.value);
     if (!kcal) { alert("Please complete the calorie count field."); return; }
     
     let diets = JSON.parse(localStorage.getItem('healthDiets')) || [];
-    diets.unshift({ dateStr: new Date().toLocaleDateString(), label, kcal });
+    diets.unshift({ dateStr: new Date().toLocaleDateString(), label: "Meal Entry", kcal: kcal });
     localStorage.setItem('healthDiets', JSON.stringify(diets));
     
-    if(document.getElementById('dietLabel')) document.getElementById('dietLabel').value = '';
     if(document.getElementById('dietKcal')) document.getElementById('dietKcal').value = '';
     updateDashboardView();
 }
@@ -60,7 +58,7 @@ function calculateBMI() {
     else { status = "Obesity"; colorClass = "text-red-600"; }
     const statusEl = document.getElementById('bmiStatus');
     statusEl.innerText = status;
-    statusEl.className = `text-xs font-semibold mt-1 ${colorClass}`;
+    statusEl.className = "text-xs font-semibold mt-1 " + colorClass;
     document.getElementById('bmiResult').style.display = 'block';
     return bmi;
 }
@@ -79,44 +77,44 @@ function logVitals() {
         dateStr: today.toLocaleDateString(),
         timeStr: today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         bmi: bmi,
-        bp: (bpSys && bpDia) ? `${bpSys}/${bpDia}` : "—",
+        bp: (bpSys && bpDia) ? (bpSys + "/" + bpDia) : "—",
         bpSysNum: bpSys ? parseInt(bpSys) : null,
         sugarNum: sugar ? parseInt(sugar) : null,
         pulseNum: pulse ? parseInt(pulse) : null
     });
     localStorage.setItem('healthLogs', JSON.stringify(logs));
-    ['bpSys', 'bpDia', 'sugar', 'pulse'].forEach(id => document.getElementById(id).value = '');
+    ['bpSys', 'bpDia', 'sugar', 'pulse'].forEach(function(id) {
+        if(document.getElementById(id)) document.getElementById(id).value = '';
+    });
     updateDashboardView();
 }
 
 // 6. Log Expense
 function logExpense() {
-    const label = document.getElementById('expLabel')?.value || "Medical Expense";
     const cost = parseFloat(document.getElementById('expCost').value);
     if (!cost) { alert("Please complete expense item logs fields."); return; }
     let expenses = JSON.parse(localStorage.getItem('healthExpenses')) || [];
-    expenses.unshift({ dateStr: new Date().toLocaleDateString(), label, cost: cost.toFixed(2) });
+    expenses.unshift({ dateStr: new Date().toLocaleDateString(), label: "Medical Expense", cost: cost.toFixed(2) });
     localStorage.setItem('healthExpenses', JSON.stringify(expenses));
-    if(document.getElementById('expLabel')) document.getElementById('expLabel').value = '';
     document.getElementById('expCost').value = '';
     updateDashboardView();
 }
 
-// 7. Habit Streak System Tiers (FIXED Syntax Error Array Binding)
+// 7. Habit Streak System Tiers
 function setChallengeTier(days) {
     targetChallengeTier = days;
     localStorage.setItem('challengeTier', days);
     
     let tiers =;
-    tiers.forEach(d => {
-        const btn = document.getElementById(`tierBtn${d}`);
+    tiers.forEach(function(d) {
+        const btn = document.getElementById("tierBtn" + d);
         if(btn) {
             btn.style.backgroundColor = d === days ? '#f59e0b' : '#e5e7eb';
             btn.style.color = d === days ? 'white' : '#374151';
         }
     });
     const labelEl = document.getElementById('targetTierLabel');
-    if (labelEl) labelEl.innerText = `${days} Days`;
+    if (labelEl) labelEl.innerText = days + " Days";
     updateChallengeStreak();
 }
 
@@ -129,8 +127,8 @@ function updateChallengeStreak() {
     if (!logs.length) { countEl.innerText = "0"; progressEl.style.width = "0%"; return; }
     
     let streak = 1; 
-    countEl.innerText = `${streak}`;
-    progressEl.style.width = `${Math.min((streak / targetChallengeTier) * 100, 100)}%`;
+    countEl.innerText = streak;
+    progressEl.style.width = Math.min((streak / targetChallengeTier) * 100, 100) + "%";
 }
 
 // 9. Render Calendar Visuals
@@ -143,29 +141,31 @@ function renderCalendar() {
     label.innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
     const totalDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
     const firstDayIndex = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
-    const loggedDays = (JSON.parse(localStorage.getItem('healthLogs')) || []).filter(l => new Date(l.dateStr).getMonth() === now.getMonth()).map(l => l.dayNum);
+    const loggedDays = (JSON.parse(localStorage.getItem('healthLogs')) || []).filter(function(l) {
+        return new Date(l.dateStr).getMonth() === now.getMonth();
+    }).map(function(l) { return l.dayNum; });
     
-    for (let i = 0; i < firstDayIndex; i++) { grid.innerHTML += `<div></div>`; }
+    for (let i = 0; i < firstDayIndex; i++) { grid.innerHTML += '<div></div>'; }
     for (let day = 1; day <= totalDays; day++) {
         const circleStyle = loggedDays.includes(day) ? 'background-color:#10b981; color:white; border-radius:50%; font-weight:bold;' : 'color:#374151;';
-        grid.innerHTML += `<div style="padding:6px; display:flex; align-items:center; justify-content:center; height:24px; width:24px; margin:auto; ${circleStyle}">${day}</div>`;
+        grid.innerHTML += '<div style="padding:6px; display:flex; align-items:center; justify-content:center; height:24px; width:24px; margin:auto; ' + circleStyle + '">' + day + '</div>';
     }
 }
 
 // 10. Trendline Graphs Analytics
 function renderChart() {
-    const logs = [...(JSON.parse(localStorage.getItem('healthLogs')) || [])].reverse();
+    const logs = (JSON.parse(localStorage.getItem('healthLogs')) || []).slice().reverse();
     const canvas = document.getElementById('healthChart');
     if(!canvas) return;
     if (healthChartInstance) { healthChartInstance.destroy(); }
     healthChartInstance = new Chart(canvas.getContext('2d'), {
         type: 'line',
         data: {
-            labels: logs.map(l => l.dateStr).length ? logs.map(l => l.dateStr) : ['No Data'],
+            labels: logs.map(function(l) { return l.dateStr; }).length ? logs.map(function(l) { return l.dateStr; }) : ['No Data'],
             datasets: [
-                { label: 'Sugar', data: logs.map(l => l.sugarNum), borderColor: '#0D9488', tension: 0.2, fill: false },
-                { label: 'Pulse', data: logs.map(l => l.pulseNum), borderColor: '#F43F5E', tension: 0.2, fill: false },
-                { label: 'BP Systolic', data: logs.map(l => l.bpSysNum), borderColor: '#2563EB', tension: 0.2, fill: false }
+                { label: 'Sugar', data: logs.map(function(l) { return l.sugarNum; }), borderColor: '#0D9488', tension: 0.2, fill: false },
+                { label: 'Pulse', data: logs.map(function(l) { return l.pulseNum; }), borderColor: '#F43F5E', tension: 0.2, fill: false },
+                { label: 'BP Systolic', data: logs.map(function(l) { return l.bpSysNum; }), borderColor: '#2563EB', tension: 0.2, fill: false }
             ]
         },
         options: { responsive: true, maintainAspectRatio: false }
@@ -176,26 +176,26 @@ function renderChart() {
 function setAlarm() {
     const time = document.getElementById('alarmTime').value;
     if (!time) { alert("Please provide an alarm trigger time."); return; }
-    activeAlarmsArray.push({ label: "Health Check Alert!", time, triggered: false });
+    activeAlarmsArray.push({ label: "Health Check Alert!", time: time, triggered: false });
     localStorage.setItem('healthAlarms', JSON.stringify(activeAlarmsArray));
     renderAlarmsList();
 }
 function renderAlarmsList() {
     const container = document.getElementById('activeAlarms');
     if(!container) return; container.innerHTML = '';
-    activeAlarmsArray.forEach((alarm, i) => {
-        container.innerHTML += `<div style="display:flex; justify-content:space-between; background:#faf5ff; padding:8px; border-radius:4px; margin-top:4px; font-size:12px; border:1px solid #f3e8ff;"><span>🔔 <strong>${alarm.time}</strong> - ${alarm.label}</span><button onclick="deleteAlarm(${i})" style="width:auto; margin:0; padding:2px 6px; background:#ef4444; border:none; color:white; border-radius:4px; cursor:pointer;">✕</button></div>`;
+    activeAlarmsArray.forEach(function(alarm, i) {
+        container.innerHTML += '<div style="display:flex; justify-content:space-between; background:#faf5ff; padding:8px; border-radius:4px; margin-top:4px; font-size:12px; border:1px solid #f3e8ff;"><span>🔔 <strong>' + alarm.time + '</strong> - ' + alarm.label + '</span><button onclick="deleteAlarm(' + i + ')" style="width:auto; margin:0; padding:2px 6px; background:#ef4444; border:none; color:white; border-radius:4px; cursor:pointer;">✕</button></div>';
     });
 }
 function deleteAlarm(i) { activeAlarmsArray.splice(i,1); localStorage.setItem('healthAlarms', JSON.stringify(activeAlarmsArray)); renderAlarmsList(); }
 
-setInterval(() => {
+setInterval(function() {
     const currentClockTime = new Date().toTimeString().slice(0,5);
-    activeAlarmsArray.forEach(alarm => {
+    activeAlarmsArray.forEach(function(alarm) {
         if(alarm.time === currentClockTime && !alarm.triggered) {
             const audio = document.getElementById('alarmSound');
-            if(audio) audio.play().catch(e => console.log('Audio waiting for touch activation...'));
-            alert(`⏰ REMINDER: ${alarm.label}`); alarm.triggered = true;
+            if(audio) audio.play().catch(function(e) { console.log('Audio waiting...'); });
+            alert("⏰ REMINDER: " + alarm.label); alarm.triggered = true;
         }
         if(alarm.time !== currentClockTime) { alarm.triggered = false; }
     });
@@ -205,3 +205,4 @@ setInterval(() => {
 function sharePlatform(p) {
     const pageUrl = encodeURIComponent(window.location.href);
     const text = encodeURIComponent("Track your BMI, health vitals and water tracking goals privately using VitalsTracker Pro!");
+    if(p === 'copy') { navigator.clipboard.writeText(window.location.href); alert("App shortcut URL copied!"); return; }
