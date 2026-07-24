@@ -18,9 +18,10 @@
         .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; box-sizing: border-box; }
         h2 { margin-top: 0; font-size: 18px; color: #111827; border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; }
         label { display: block; font-size: 12px; font-weight: 600; color: #4b5563; margin-top: 10px; margin-bottom: 4px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background-color: #fff; box-sizing: border-box; }
+        input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background-color: #fff; box-sizing: border-box; }
         button { width: 100%; padding: 12px; margin-top: 12px; background-color: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
         button:hover { opacity: 0.9; }
+        .grid-4 { display: grid; grid-template-cols: repeat(4, 1fr); gap: 6px; }
         .grid-3 { display: grid; grid-template-cols: 1fr 1fr 1fr; gap: 8px; }
         .grid-2 { display: grid; grid-template-cols: 1fr 1fr; gap: 8px; }
         .tier-btn { background-color: #e5e7eb; color: #374151; padding: 8px; margin-top: 5px; font-size: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
@@ -32,15 +33,18 @@
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
         th { background-color: #f9fafb; color: #6b7280; font-size: 11px; text-transform: uppercase; }
         .footer-banner { background-color: #1f2937; color: #9ca3af; padding: 25px; font-size: 11px; text-align: center; margin-top: 40px; }
-        .share-btn { text-decoration: none; display: inline-block; padding: 12px; border-radius: 6px; color: white; font-weight: bold; font-size: 13px; text-align: center; margin-top: 5px; box-sizing: border-box; }
-        .water-btn { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: bold; padding: 8px; font-size: 12px; border-radius: 6px; cursor: pointer; text-align: center; margin-top: 5px; }
+        .share-btn { text-decoration: none; display: inline-block; padding: 12px; border-radius: 6px; color: white; font-weight: bold; font-size: 13px; text-align: center; margin-top: 5px; box-sizing: border-box; width: 100%; }
+        .water-btn { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: bold; padding: 12px; font-size: 12px; border-radius: 6px; cursor: pointer; text-align: center; margin-top: 5px; }
+        .calc-screen { width: 100%; padding: 12px; background: #1e293b; color: #00ff66; text-align: right; font-size: 20px; font-family: monospace; border-radius: 6px; border: none; margin-bottom: 10px; }
+        .calc-btn { background: #e2e8f0; color: #1e293b; padding: 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
+        .calc-btn:hover { background: #cbd5e1; }
+        .grid-7 { display: grid; grid-template-cols: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 12px; }
     </style>
-    <!-- Chart.js framework execution library -->
+    <!-- Chart.js Framework -->
     <script src="https://jsdelivr.net"></script>
 </head>
 <body>
 
-    <!-- Header Navigation -->
     <nav>❤️ VitalsTracker Pro</nav>
 
     <main>
@@ -49,7 +53,7 @@
             [Google AdSense Mobile Smart Banner Advertisement Place]
         </div>
 
-        <!-- Outdoor Activity Weather Advisor -->
+        <!-- Weather Status Card -->
         <div class="card" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: white;">
             <h2 style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">☀️ Outdoor Activity Weather Advisor</h2>
             <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
@@ -65,18 +69,18 @@
             </div>
         </div>
 
-        <!-- Mobile Shortcut Instructions Card -->
+        <!-- Mobile Shortcut Setup Instructions -->
         <div class="card" style="background: linear-gradient(135deg, #2563eb, #4f46e5); color: white;">
             <h2 style="color: white; border-bottom: 1px solid rgba(255,255,255,0.2);">📱 Install as Mobile App</h2>
             <div style="font-size: 11px; line-height: 1.5; opacity: 0.95;">
-                <p><strong>Android/Chrome:</strong> Tap 3-dots ➔ "Add to Home Screen".</p>
+                <p><strong>Android/Chrome:</strong> Tap 3-dots menu ➔ "Add to Home Screen".</p>
                 <p><strong>iPhone/Safari:</strong> Tap Share icon ➔ "Add to Home Screen".</p>
             </div>
         </div>
 
-        <!-- NEW FEATURE: Standard Health Target Reference Reference Guides -->
+        <!-- Healthy Targets Reference Guide -->
         <div class="card" style="background-color: #fffbeb; border: 1px solid #fde68a;">
-            <h2 style="color: #b45309; border-bottom: 2px solid #fef3c7;">📋 Healthy Vitals Target Reference Reference</h2>
+            <h2 style="color: #b45309; border-bottom: 2px solid #fde68a;">📋 Healthy Vitals Target Reference Reference</h2>
             <div style="font-size: 12px; line-height: 1.6; color: #78350f;" class="grid-2">
                 <div>
                     <p>• <strong>BMI Index:</strong> Normal Range (18.5 - 24.9)</p>
@@ -89,11 +93,11 @@
             </div>
         </div>
 
-        <!-- Streak Logging Challenge Card -->
+        <!-- Streak Logging Challenge Component -->
         <div class="card">
             <h2 style="color:#d97706;">🏆 Multi-Tier Logging Challenge</h2>
             <div class="grid-3">
-                <button onclick="setChallengeTier(30)" id="tierBtn30" class="tier-btn" style="background-color:#f59e0b; color:white;">30 Days</button>
+                <button onclick="setChallengeTier(30)" id="tierBtn30" class="tier-btn">30 Days</button>
                 <button onclick="setChallengeTier(60)" id="tierBtn60" class="tier-btn">60 Days</button>
                 <button onclick="setChallengeTier(90)" id="tierBtn90" class="tier-btn">90 Days</button>
             </div>
@@ -110,13 +114,22 @@
             </div>
         </div>
 
-        <!-- NEW FEATURE: Water Hydration Logging Monitor -->
+        <!-- Active Log Tracking Calendar Grid -->
+        <div class="card">
+            <h2>📅 Activity Tracking History Calendar</h2>
+            <div id="calendarMonthLabel" style="text-align:center; font-weight:bold; font-size:14px; margin-bottom:8px; color:#4b5563;"></div>
+            <div class="grid-7" style="font-weight:600; color:#9ca3af; margin-bottom:5px;">
+                <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+            </div>
+            <div id="calendarGrid" class="grid-7"></div>
+        </div>
+
+        <!-- Daily Water Hydration Tracker Card -->
         <div class="card">
             <h2 style="color: #0284c7;">💧 Daily Water Hydration Tracker</h2>
-            <p style="font-size: 12px; color: #6b7280; margin-bottom: 10px;">Medical guidance recommends approx. 2,000ml - 3,000ml target fluid balances daily.</p>
             <div class="grid-3">
-                <div class="water-btn" onclick="addWater(250)">+250 ml (Glass)</div>
-                <div class="water-btn" onclick="addWater(500)">+500 ml (Bottle)</div>
+                <div class="water-btn" onclick="addWater(250)">+250 ml</div>
+                <div class="water-btn" onclick="addWater(500)">+500 ml</div>
                 <div class="water-btn" onclick="addWater(1000)">+1.0 Liter</div>
             </div>
             <div style="background-color: #f0f9ff; padding: 12px; border-radius: 8px; text-align: center; margin-top: 12px; border: 1px solid #e0f2fe;">
@@ -124,18 +137,5 @@
             </div>
         </div>
 
-        <!-- Health Expenses Tracker Card -->
-        <div class="card">
-            <h2 style="color:#4f46e5;">💵 Health Expense Tracker</h2>
-            <label>Expense Description</label>
-            <input type="text" id="expLabel" placeholder="Medication, Checkup">
-            <label>Cost Value</label>
-            <input type="number" id="expCost" placeholder="0.00">
-            <button onclick="logExpense()" style="background-color:#4f46e5;">Save Expense Item</button>
-            <div style="background-color:#eef2ff; padding:10px; border-radius:6px; text-align:center; margin-top:12px; border:1px solid #e0e7ff;">
-                <p style="margin:0; font-size:12px; font-weight:600; color:#374151;">Total Running Outlay: <span id="totalExpenseVal" style="font-size:15px; color:#4f46e5; font-weight:800;">$0.00</span></p>
-            </div>
-        </div>
-
-        <!-- NEW FEATURE: Dietary & Calorie Log intake manager form -->
+        <!-- Health Financial Outlays Expense Tracker Card -->
         <div class="card">
