@@ -1,141 +1,206 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VitalsTracker Pro - Ultimate Mobile Hub</title>
+let healthChartInstance = null;
+let activeAlarmsArray = JSON.parse(localStorage.getItem('healthAlarms')) || [];
+let targetChallengeTier = parseInt(localStorage.getItem('challengeTier')) || 30;
+let totalWaterLogged = parseInt(localStorage.getItem('waterToday')) || 0;
+
+// 1. Math Calculator Operations
+function pressCalc(val) {
+    const display = document.getElementById('calcDisplay');
+    if(display) {
+        if(display.value === '0' || display.value === 'Error') display.value = val;
+        else display.value += val;
+    }
+}
+function clearCalc() {
+    const display = document.getElementById('calcDisplay');
+    if(display) display.value = '0';
+}
+function evalCalc() {
+    const display = document.getElementById('calcDisplay');
+    if(display) {
+        try { display.value = eval(display.value); }
+        catch(e) { display.value = 'Error'; }
+    }
+}
+
+// 2. Hydration Operations
+function addWater(amount) {
+    totalWaterLogged += amount;
+    localStorage.setItem('waterToday', totalWaterLogged);
+    const element = document.getElementById('totalWaterLabel');
+    if(element) element.innerText = `${totalWaterLogged} ml`;
+}
+
+// 3. Nutrition Operations
+function logDiet() {
+    const label = document.getElementById('dietLabel')?.value || "Meal Entry";
+    const kcal = parseInt(document.getElementById('dietKcal')?.value);
+    if (!kcal) { alert("Please complete the calorie count field."); return; }
     
-    <!-- Mobile App Settings (PWA Meta Tags) -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#2563EB">
+    let diets = JSON.parse(localStorage.getItem('healthDiets')) || [];
+    diets.unshift({ dateStr: new Date().toLocaleDateString(), label, kcal });
+    localStorage.setItem('healthDiets', JSON.stringify(diets));
+    
+    if(document.getElementById('dietLabel')) document.getElementById('dietLabel').value = '';
+    if(document.getElementById('dietKcal')) document.getElementById('dietKcal').value = '';
+    updateDashboardView();
+}
 
-    <!-- Standalone CSS Style Override -->
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f3f4f6; margin: 0; padding-bottom: 80px; color: #1f2937; }
-        nav { background-color: #2563eb; color: white; padding: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); font-size: 20px; font-weight: bold; text-align: center; }
-        main { max-width: 800px; margin: 0 auto; padding: 15px; }
-        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; box-sizing: border-box; }
-        h2 { margin-top: 0; font-size: 18px; color: #111827; border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; }
-        label { display: block; font-size: 12px; font-weight: 600; color: #4b5563; margin-top: 10px; margin-bottom: 4px; }
-        input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background-color: #fff; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; margin-top: 12px; background-color: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
-        button:hover { opacity: 0.9; }
-        .grid-4 { display: grid; grid-template-cols: repeat(4, 1fr); gap: 6px; }
-        .grid-3 { display: grid; grid-template-cols: 1fr 1fr 1fr; gap: 8px; }
-        .grid-2 { display: grid; grid-template-cols: 1fr 1fr; gap: 8px; }
-        .tier-btn { background-color: #e5e7eb; color: #374151; padding: 8px; margin-top: 5px; font-size: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .streak-box { background-color: #f9fafb; padding: 15px; border-radius: 8px; text-align: center; margin-top: 10px; border: 1px solid #f3f4f6; }
-        .progress-bg { width: 100%; background-color: #e5e7eb; border-radius: 9999px; height: 10px; margin-top: 10px; overflow: hidden; }
-        .progress-bar { background: linear-gradient(90deg, #fbbf24, #f59e0b); height: 100%; width: 0%; transition: width 0.3s ease; }
-        .chart-container { position: relative; height: 260px; width: 100%; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
-        th { background-color: #f9fafb; color: #6b7280; font-size: 11px; text-transform: uppercase; }
-        .footer-banner { background-color: #1f2937; color: #9ca3af; padding: 25px; font-size: 11px; text-align: center; margin-top: 40px; }
-        .share-btn { text-decoration: none; display: inline-block; padding: 12px; border-radius: 6px; color: white; font-weight: bold; font-size: 13px; text-align: center; margin-top: 5px; box-sizing: border-box; width: 100%; }
-        .water-btn { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: bold; padding: 12px; font-size: 12px; border-radius: 6px; cursor: pointer; text-align: center; margin-top: 5px; }
-        .calc-screen { width: 100%; padding: 12px; background: #1e293b; color: #00ff66; text-align: right; font-size: 20px; font-family: monospace; border-radius: 6px; border: none; margin-bottom: 10px; }
-        .calc-btn { background: #e2e8f0; color: #1e293b; padding: 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
-        .calc-btn:hover { background: #cbd5e1; }
-        .grid-7 { display: grid; grid-template-cols: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 12px; }
-    </style>
-    <!-- Chart.js Framework -->
-    <script src="https://jsdelivr.net"></script>
-</head>
-<body>
+// 4. Calculate BMI Score
+function calculateBMI() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const heightCm = parseFloat(document.getElementById('height').value);
+    if (!weight || !heightCm) { alert("Please complete weight and height fields."); return; }
+    const bmi = (weight / ((heightCm / 100) * (heightCm / 100))).toFixed(1);
+    document.getElementById('bmiValue').innerText = bmi;
+    let status = "", colorClass = "";
+    if (bmi < 18.5) { status = "Underweight"; colorClass = "text-yellow-600"; }
+    else if (bmi < 24.9) { status = "Normal Weight"; colorClass = "text-green-600"; }
+    else if (bmi < 29.9) { status = "Overweight"; colorClass = "text-orange-600"; }
+    else { status = "Obesity"; colorClass = "text-red-600"; }
+    const statusEl = document.getElementById('bmiStatus');
+    statusEl.innerText = status;
+    statusEl.className = `text-xs font-semibold mt-1 ${colorClass}`;
+    document.getElementById('bmiResult').style.display = 'block';
+    return bmi;
+}
 
-    <nav>❤️ VitalsTracker Pro</nav>
+// 5. Log Vitals
+function logVitals() {
+    const bpSys = document.getElementById('bpSys').value;
+    const bpDia = document.getElementById('bpDia').value;
+    const sugar = document.getElementById('sugar').value;
+    const pulse = document.getElementById('pulse').value;
+    const bmi = document.getElementById('bmiValue').innerText !== "0.0" ? document.getElementById('bmiValue').innerText : "—";
+    const today = new Date();
+    
+    let logs = JSON.parse(localStorage.getItem('healthLogs')) || [];
+    logs.unshift({
+        dateStr: today.toLocaleDateString(),
+        timeStr: today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        bmi: bmi,
+        bp: (bpSys && bpDia) ? `${bpSys}/${bpDia}` : "—",
+        bpSysNum: bpSys ? parseInt(bpSys) : null,
+        sugarNum: sugar ? parseInt(sugar) : null,
+        pulseNum: pulse ? parseInt(pulse) : null
+    });
+    localStorage.setItem('healthLogs', JSON.stringify(logs));
+    ['bpSys', 'bpDia', 'sugar', 'pulse'].forEach(id => document.getElementById(id).value = '');
+    updateDashboardView();
+}
 
-    <main>
-        <!-- AdSense Top Banner -->
-        <div style="background-color:#e5e7eb; padding:10px; text-align:center; font-size:11px; color:#6b7280; border-radius:6px; margin-bottom:20px;">
-            [Google AdSense Mobile Smart Banner Advertisement Place]
-        </div>
+// 6. Log Expense
+function logExpense() {
+    const label = document.getElementById('expLabel')?.value || "Medical Expense";
+    const cost = parseFloat(document.getElementById('expCost').value);
+    if (!cost) { alert("Please complete expense item logs fields."); return; }
+    let expenses = JSON.parse(localStorage.getItem('healthExpenses')) || [];
+    expenses.unshift({ dateStr: new Date().toLocaleDateString(), label, cost: cost.toFixed(2) });
+    localStorage.setItem('healthExpenses', JSON.stringify(expenses));
+    if(document.getElementById('expLabel')) document.getElementById('expLabel').value = '';
+    document.getElementById('expCost').value = '';
+    updateDashboardView();
+}
 
-        <!-- Weather Status Card -->
-        <div class="card" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: white;">
-            <h2 style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">☀️ Outdoor Activity Weather Advisor</h2>
-            <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <span style="font-size: 24px; font-weight: bold;">31°C</span>
-                        <span style="font-size: 14px; margin-left: 5px; color: #94a3b8;">Partly Cloudy</span>
-                    </div>
-                    <div>
-                        <span style="background-color: #059669; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">Good for Walks</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+// 7. Habit Streak System Tiers (FIXED: Added explicit array binding syntax)
+function setChallengeTier(days) {
+    targetChallengeTier = days;
+    localStorage.setItem('challengeTier', days);
+    
+    let tiers =;
+    tiers.forEach(d => {
+        const btn = document.getElementById(`tierBtn${d}`);
+        if(btn) {
+            btn.style.backgroundColor = d === days ? '#f59e0b' : '#e5e7eb';
+            btn.style.color = d === days ? 'white' : '#374151';
+        }
+    });
+    document.getElementById('targetTierLabel').innerText = `${days} Days`;
+    updateChallengeStreak();
+}
 
-        <!-- Mobile Shortcut Setup Instructions -->
-        <div class="card" style="background: linear-gradient(135deg, #2563eb, #4f46e5); color: white;">
-            <h2 style="color: white; border-bottom: 1px solid rgba(255,255,255,0.2);">📱 Install as Mobile App</h2>
-            <div style="font-size: 11px; line-height: 1.5; opacity: 0.95;">
-                <p><strong>Android/Chrome:</strong> Tap 3-dots menu ➔ "Add to Home Screen".</p>
-                <p><strong>iPhone/Safari:</strong> Tap Share icon ➔ "Add to Home Screen".</p>
-            </div>
-        </div>
+function updateChallengeStreak() {
+    const logs = JSON.parse(localStorage.getItem('healthLogs')) || [];
+    const countEl = document.getElementById('streakCount');
+    const progressEl = document.getElementById('streakProgress');
+    if (!countEl || !progressEl) return;
+    if (!logs.length) { countEl.innerText = "0"; progressEl.style.width = "0%"; return; }
+    
+    let streak = 1; 
+    countEl.innerText = `${streak}`;
+    progressEl.style.width = `${Math.min((streak / targetChallengeTier) * 100, 100)}%`;
+}
 
-        <!-- Healthy Targets Reference Guide -->
-        <div class="card" style="background-color: #fffbeb; border: 1px solid #fde68a;">
-            <h2 style="color: #b45309; border-bottom: 2px solid #fde68a;">📋 Healthy Vitals Target Reference Reference</h2>
-            <div style="font-size: 12px; line-height: 1.6; color: #78350f;" class="grid-2">
-                <div>
-                    <p>• <strong>BMI Index:</strong> Normal Range (18.5 - 24.9)</p>
-                    <p>• <strong>Blood Pressure:</strong> Less than 120/80 mmHg</p>
-                </div>
-                <div>
-                    <p>• <strong>Fasting Blood Sugar:</strong> 70 - 99 mg/dL</p>
-                    <p>• <strong>Resting Pulse Rate:</strong> 60 - 100 Beats/Min</p>
-                </div>
-            </div>
-        </div>
+// 8. Render Calendar Visuals
+function renderCalendar() {
+    const grid = document.getElementById('calendarGrid');
+    const label = document.getElementById('calendarMonthLabel');
+    if (!grid || !label) return;
+    grid.innerHTML = '';
+    const now = new Date();
+    label.innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+    const totalDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const firstDayIndex = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+    const loggedDays = (JSON.parse(localStorage.getItem('healthLogs')) || []).filter(l => new Date(l.dateStr).getMonth() === now.getMonth()).map(l => l.dayNum);
+    
+    for (let i = 0; i < firstDayIndex; i++) { grid.innerHTML += `<div></div>`; }
+    for (let day = 1; day <= totalDays; day++) {
+        const circleStyle = loggedDays.includes(day) ? 'background-color:#10b981; color:white; border-radius:50%; font-weight:bold;' : 'color:#374151;';
+        grid.innerHTML += `<div style="padding:6px; display:flex; align-items:center; justify-content:center; height:24px; width:24px; margin:auto; ${circleStyle}">${day}</div>`;
+    }
+}
 
-        <!-- Streak Logging Challenge Component -->
-        <div class="card">
-            <h2 style="color:#d97706;">🏆 Multi-Tier Logging Challenge</h2>
-            <div class="grid-3">
-                <button onclick="setChallengeTier(30)" id="tierBtn30" class="tier-btn">30 Days</button>
-                <button onclick="setChallengeTier(60)" id="tierBtn60" class="tier-btn">60 Days</button>
-                <button onclick="setChallengeTier(90)" id="tierBtn90" class="tier-btn">90 Days</button>
-            </div>
-            <div class="streak-box">
-                <div style="display:flex; justify-content:space-between; font-size:12px; color:#6b7280;">
-                    <span>Current Streak</span><span>Target Goal</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:5px;">
-                    <span style="font-size:28px; font-weight:800; color:#f59e0b;" id="streakCount">0 <span style="font-size:14px; font-weight:400; color:#9ca3af;">days 🔥</span></span>
-                    <span style="font-size:14px; font-weight:700; color:#4b5563;" id="targetTierLabel">30 Days</span>
-                </div>
-                <div class="progress-bg"><div id="streakProgress" class="progress-bar"></div></div>
-                <p id="challengeMilestone" style="font-size:11px; color:#9ca3af; margin-top:8px; font-style:italic;">Log entries daily to keep your habit streak alive.</p>
-            </div>
-        </div>
+// 9. Trendline Graphs Analytics
+function renderChart() {
+    const logs = [...(JSON.parse(localStorage.getItem('healthLogs')) || [])].reverse();
+    const canvas = document.getElementById('healthChart');
+    if(!canvas) return;
+    if (healthChartInstance) { healthChartInstance.destroy(); }
+    healthChartInstance = new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: logs.map(l => l.dateStr).length ? logs.map(l => l.dateStr) : ['No Data'],
+            datasets: [
+                { label: 'Sugar', data: logs.map(l => l.sugarNum), borderColor: '#0D9488', tension: 0.2, fill: false },
+                { label: 'Pulse', data: logs.map(l => l.pulseNum), borderColor: '#F43F5E', tension: 0.2, fill: false },
+                { label: 'BP Systolic', data: logs.map(l => l.bpSysNum), borderColor: '#2563EB', tension: 0.2, fill: false }
+            ]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+}
 
-        <!-- Active Log Tracking Calendar Grid -->
-        <div class="card">
-            <h2>📅 Activity Tracking History Calendar</h2>
-            <div id="calendarMonthLabel" style="text-align:center; font-weight:bold; font-size:14px; margin-bottom:8px; color:#4b5563;"></div>
-            <div class="grid-7" style="font-weight:600; color:#9ca3af; margin-bottom:5px;">
-                <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
-            </div>
-            <div id="calendarGrid" class="grid-7"></div>
-        </div>
+// 10. Alarm Reminders Controls
+function setAlarm() {
+    const time = document.getElementById('alarmTime').value;
+    if (!time) { alert("Please provide an alarm trigger time."); return; }
+    activeAlarmsArray.push({ label: "Health Check Alert!", time, triggered: false });
+    localStorage.setItem('healthAlarms', JSON.stringify(activeAlarmsArray));
+    renderAlarmsList();
+}
+function renderAlarmsList() {
+    const container = document.getElementById('activeAlarms');
+    if(!container) return; container.innerHTML = '';
+    activeAlarmsArray.forEach((alarm, i) => {
+        container.innerHTML += `<div style="display:flex; justify-content:space-between; background:#faf5ff; padding:8px; border-radius:4px; margin-top:4px; font-size:12px; border:1px solid #f3e8ff;"><span>🔔 <strong>${alarm.time}</strong> - ${alarm.label}</span><button onclick="deleteAlarm(${i})" style="width:auto; margin:0; padding:2px 6px; background:#ef4444; border:none; color:white; border-radius:4px;">✕</button></div>`;
+    });
+}
+function deleteAlarm(i) { activeAlarmsArray.splice(i,1); localStorage.setItem('healthAlarms', JSON.stringify(activeAlarmsArray)); renderAlarmsList(); }
 
-        <!-- Daily Water Hydration Tracker Card -->
-        <div class="card">
-            <h2 style="color: #0284c7;">💧 Daily Water Hydration Tracker</h2>
-            <div class="grid-3">
-                <div class="water-btn" onclick="addWater(250)">+250 ml</div>
-                <div class="water-btn" onclick="addWater(500)">+500 ml</div>
-                <div class="water-btn" onclick="addWater(1000)">+1.0 Liter</div>
-            </div>
-            <div style="background-color: #f0f9ff; padding: 12px; border-radius: 8px; text-align: center; margin-top: 12px; border: 1px solid #e0f2fe;">
-                <p style="margin:0; font-size:13px; font-weight:600; color:#0369a1;">Total Logged Today: <span id="totalWaterLabel" style="font-size:16px; font-weight:800;">0 ml</span></p>
-            </div>
-        </div>
+setInterval(() => {
+    const currentClockTime = new Date().toTimeString().slice(0,5);
+    activeAlarmsArray.forEach(alarm => {
+        if(alarm.time === currentClockTime && !alarm.triggered) {
+            const audio = document.getElementById('alarmSound');
+            if(audio) audio.play().catch(e => console.log('Audio processing wait...'));
+            alert(`⏰ REMINDER: ${alarm.label}`); alarm.triggered = true;
+        }
+        if(alarm.time !== currentClockTime) { alarm.triggered = false; }
+    });
+}, 1000);
 
-        <!-- Health Financial Outlays Expense Tracker Card -->
-        <div class="card">
+// 11. Social Sharing Utilities
+function sharePlatform(p) {
+    const pageUrl = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent("Track your BMI, health vitals and water tracking goals privately using VitalsTracker Pro!");
+    if(p === 'copy') { navigator.clipboard.writeText(window.location.href); alert("App shortcut URL copied!"); return; }
