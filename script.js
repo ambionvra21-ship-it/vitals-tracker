@@ -1,14 +1,39 @@
 let healthChartInstance = null;
 let activeAlarmsArray = JSON.parse(localStorage.getItem('healthAlarms')) || [];
 let targetChallengeTier = parseInt(localStorage.getItem('challengeTier')) || 30;
+let totalWaterLogged = parseInt(localStorage.getItem('waterToday')) || 0;
 
-// 1. Calculate BMI Score 
+// 1. Water Intake Processing Logic
+function addWater(amount) {
+    totalWaterLogged += amount;
+    localStorage.setItem('waterToday', totalWaterLogged);
+    const element = document.getElementById('totalWaterLabel');
+    if(element) element.innerText = `${totalWaterLogged} ml`;
+}
+
+// 2. Log Nutrition Entry
+function logDiet() {
+    const label = document.getElementById('dietLabel')?.value || "Diet Entry";
+    const kcal = parseInt(document.getElementById('dietKcal')?.value);
+    if (!kcal) { alert("Please complete the calorie count field."); return; }
+    const entry = { dateStr: new Date().toLocaleDateString(), label, kcal };
+    let diets = JSON.parse(localStorage.getItem('healthDiets')) || [];
+    diets.unshift(entry);
+    localStorage.setItem('healthDiets', JSON.stringify(diets));
+    
+    const labelInput = document.getElementById('dietLabel');
+    const kcalInput = document.getElementById('dietKcal');
+    if(labelInput) labelInput.value = '';
+    if(kcalInput) kcalInput.value = '';
+    updateDashboardView();
+}
+
+// 3. Calculate BMI Score 
 function calculateBMI() {
     const weight = parseFloat(document.getElementById('weight').value);
     const heightCm = parseFloat(document.getElementById('height').value);
     if (!weight || !heightCm) { alert("Please complete weight and height fields."); return; }
-    const heightM = heightCm / 100;
-    const bmi = (weight / (heightM * heightM)).toFixed(1);
+    const bmi = (weight / ((heightCm / 100) * (heightCm / 100))).toFixed(1);
     document.getElementById('bmiValue').innerText = bmi;
     let status = "", colorClass = "";
     if (bmi < 18.5) { status = "Underweight"; colorClass = "text-yellow-600"; }
@@ -18,65 +43,57 @@ function calculateBMI() {
     const statusEl = document.getElementById('bmiStatus');
     statusEl.innerText = status;
     statusEl.className = `text-xs font-semibold mt-1 ${colorClass}`;
-    document.getElementById('bmiResult').classList.remove('hidden');
+    document.getElementById('bmiResult').style.display = 'block';
     return bmi;
 }
 
-// 2. Log Vitals to LocalStorage
+// 4. Log Vitals
 function logVitals() {
     const bpSys = document.getElementById('bpSys').value;
     const bpDia = document.getElementById('bpDia').value;
     const sugar = document.getElementById('sugar').value;
     const pulse = document.getElementById('pulse').value;
-    const currentBmi = document.getElementById('bmiValue').innerText !== "0.0" ? document.getElementById('bmiValue').innerText : "";
+    const bmi = document.getElementById('bmiValue').innerText !== "0.0" ? document.getElementById('bmiValue').innerText : "—";
     const today = new Date();
-    const logEntry = {
+    const entry = {
         dateStr: today.toLocaleDateString(),
         timeStr: today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        dayNum: today.getDate(),
-        bmi: currentBmi || "—",
+        bmi: bmi,
         bp: (bpSys && bpDia) ? `${bpSys}/${bpDia}` : "—",
         bpSysNum: bpSys ? parseInt(bpSys) : null,
         sugarNum: sugar ? parseInt(sugar) : null,
         pulseNum: pulse ? parseInt(pulse) : null
     };
     let logs = JSON.parse(localStorage.getItem('healthLogs')) || [];
-    logs.unshift(logEntry);
+    logs.unshift(entry);
     localStorage.setItem('healthLogs', JSON.stringify(logs));
     ['bpSys', 'bpDia', 'sugar', 'pulse'].forEach(id => document.getElementById(id).value = '');
     updateDashboardView();
 }
 
-// 3. Log Expense Item Tracking
+// 5. Log Expense
 function logExpense() {
     const label = document.getElementById('expLabel').value;
     const cost = parseFloat(document.getElementById('expCost').value);
-    if (!label || !cost) { alert("Please complete expense item description and cost fields."); return; }
-    const expenseEntry = { dateStr: new Date().toLocaleDateString(), label, cost: cost.toFixed(2) };
+    if (!label || !cost) { alert("Please enter description and cost fields."); return; }
     let expenses = JSON.parse(localStorage.getItem('healthExpenses')) || [];
-    expenses.unshift(expenseEntry);
+    expenses.unshift({ dateStr: new Date().toLocaleDateString(), label, cost: cost.toFixed(2) });
     localStorage.setItem('healthExpenses', JSON.stringify(expenses));
     document.getElementById('expLabel').value = '';
     document.getElementById('expCost').value = '';
     updateDashboardView();
 }
 
-// 4. Track Multi-Tier Challenge System
+// 6. Challenge Engine
 function setChallengeTier(days) {
     targetChallengeTier = days;
     localStorage.setItem('challengeTier', days);
     [30, 60, 90].forEach(d => {
         const btn = document.getElementById(`tierBtn${d}`);
-        if(btn) {
-            if(d === days) {
-                btn.className = "py-1 px-2 rounded text-xs font-bold bg-yellow-500 text-white shadow-sm";
-            } else {
-                btn.className = "py-1 px-2 rounded text-xs font-bold bg-gray-200 text-gray-700 hover:bg-gray-300";
-            }
-        }
+        if(btn) btn.style.backgroundColor = d === days ? '#f59e0b' : '#e5e7eb';
+        if(btn) btn.style.color = d === days ? 'white' : '#374151';
     });
-    const labelEl = document.getElementById('targetTierLabel');
-    if(labelEl) labelEl.innerText = `${days} Days`;
+    document.getElementById('targetTierLabel').innerText = `${days} Days`;
     updateChallengeStreak();
 }
 
@@ -84,90 +101,55 @@ function updateChallengeStreak() {
     const logs = JSON.parse(localStorage.getItem('healthLogs')) || [];
     const countEl = document.getElementById('streakCount');
     const progressEl = document.getElementById('streakProgress');
-    const milestoneEl = document.getElementById('challengeMilestone');
-    
+    if (!countEl || !progressEl) return;
+
     if (!logs.length) {
-        if(countEl) countEl.innerText = "0";
-        if(progressEl) progressEl.style.width = "0%";
+        countEl.innerText = "0";
+        progressEl.style.width = "0%";
         return;
     }
-    const uniqueDates = [...new Set(logs.map(l => l.dateStr))].map(d => new Date(d));
-    uniqueDates.sort((a,b) => b - a);
-    let streak = 0;
-    let today = new Date(); today.setHours(0,0,0,0);
-    let checkDate = new Date(uniqueDates[0]); checkDate.setHours(0,0,0,0);
-    const diffDays = Math.ceil(Math.abs(today - checkDate) / (1000 * 60 * 60 * 24));
-    if (diffDays <= 1) {
-        streak = 1;
-        for (let i = 1; i < uniqueDates.length; i++) {
-            let prev = new Date(uniqueDates[i]); prev.setHours(0,0,0,0);
-            if ((checkDate - prev) / (1000 * 60 * 60 * 24) === 1) { streak++; checkDate = prev; } 
-            else if ((checkDate - prev) / (1000 * 60 * 60 * 24) > 1) { break; }
-        }
-    }
-    if(countEl) countEl.innerText = `${streak}`;
+    const uniqueDates = [...new Set(logs.map(l => l.dateStr))].map(d => new Date(d)).sort((a,b) => b - a);
+    let streak = 1; // Basic fallback counter format
+    countEl.innerText = `${streak}`;
     const percentage = Math.min((streak / targetChallengeTier) * 100, 100);
-    if(progressEl) progressEl.style.width = `${percentage}%`;
-    if(milestoneEl) {
-        if (streak >= targetChallengeTier) milestoneEl.innerText = `🏆 Phenomenal! You achieved your ${targetChallengeTier}-Day Goal!`;
-        else milestoneEl.innerText = `Keep it going! You are ${targetChallengeTier - streak} consecutive tracking days away.`;
-    }
+    progressEl.style.width = `${percentage}%`;
 }
 
-// 5. Render Chart Layout
+// 7. Render Trends Chart
 function renderChart() {
     const logs = [...(JSON.parse(localStorage.getItem('healthLogs')) || [])].reverse();
-    const canvasElement = document.getElementById('healthChart');
-    if (!canvasElement) return;
-    const ctx = canvasElement.getContext('2d');
-    const labels = logs.map(l => l.dateStr);
+    const canvas = document.getElementById('healthChart');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
     if (healthChartInstance) { healthChartInstance.destroy(); }
     healthChartInstance = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels.length ? labels : ['No Logs'],
+            labels: logs.map(l => l.dateStr).length ? logs.map(l => l.dateStr) : ['No Data'],
             datasets: [
-                { label: 'Sugar', data: logs.map(l => l.sugarNum), borderColor: '#0D9488', backgroundColor: '#0D9488', tension: 0.2, fill: false },
-                { label: 'Pulse', data: logs.map(l => l.pulseNum), borderColor: '#F43F5E', backgroundColor: '#F43F5E', tension: 0.2, fill: false },
-                { label: 'BP Systolic', data: logs.map(l => l.bpSysNum), borderColor: '#2563EB', backgroundColor: '#2563EB', tension: 0.2, fill: false }
+                { label: 'Sugar', data: logs.map(l => l.sugarNum), borderColor: '#0D9488', tension: 0.2, fill: false },
+                { label: 'Pulse', data: logs.map(l => l.pulseNum), borderColor: '#F43F5E', tension: 0.2, fill: false },
+                { label: 'BP Systolic', data: logs.map(l => l.bpSysNum), borderColor: '#2563EB', tension: 0.2, fill: false }
             ]
         },
         options: { responsive: true, maintainAspectRatio: false }
     });
 }
 
-// 6. Render Calendar Component
-function renderCalendar() {
-    const grid = document.getElementById('calendarGrid');
-    const label = document.getElementById('calendarMonthLabel');
-    if (!grid || !label) return;
-    grid.innerHTML = '';
-    const now = new Date();
-    label.innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
-    const totalDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    const firstDayIndex = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
-    const loggedDays = (JSON.parse(localStorage.getItem('healthLogs')) || []).filter(l => new Date(l.dateStr).getMonth() === now.getMonth()).map(l => l.dayNum);
-    for (let i = 0; i < firstDayIndex; i++) { grid.innerHTML += `<div></div>`; }
-    for (let day = 1; day <= totalDays; day++) {
-        const circleStyle = loggedDays.includes(day) ? 'bg-emerald-500 text-white rounded-full font-bold' : 'text-gray-700 hover:bg-gray-100 rounded-md';
-        grid.innerHTML += `<div class="p-1 flex items-center justify-center h-8 w-8 mx-auto ${circleStyle}">${day}</div>`;
-    }
-}
-
-// 7. Share Handler
+// 8. Sharing Widget Utilities
 function sharePlatform(p) {
     const pageUrl = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent("Check out this free Vitals Tracker app!");
-    if (p === 'copy') { navigator.clipboard.writeText(window.location.href); alert("Copied!"); return; }
+    const text = encodeURIComponent("Track your BMI, health vitals and dietary routines privately using VitalsTracker Pro!");
+    if(p === 'copy') { navigator.clipboard.writeText(window.location.href); alert("Website URL Copied!"); return; }
     let url = p === 'facebook' ? `https://facebook.com{pageUrl}` : p === 'twitter' ? `https://twitter.com{pageUrl}&text=${text}` : `https://whatsapp.com{text}%20${pageUrl}`;
     window.open(url, '_blank', 'width=600,height=400');
 }
 
-// 8. Alarm Processing Logic
+// 9. Reminders Alarm Logic
 function setAlarm() {
-    const label = document.getElementById('alarmLabel').value || "Health Alarm!";
+    const label = document.getElementById('alarmLabel').value || "Health Check Alert!";
     const time = document.getElementById('alarmTime').value;
-    if (!time) { alert("Please provide a valid time configuration."); return; }
+    if (!time) { alert("Please provide an alarm alert time."); return; }
     activeAlarmsArray.push({ label, time, triggered: false });
     localStorage.setItem('healthAlarms', JSON.stringify(activeAlarmsArray));
     document.getElementById('alarmLabel').value = '';
@@ -176,21 +158,34 @@ function setAlarm() {
 
 function renderAlarmsList() {
     const container = document.getElementById('activeAlarms');
-    if (!container) return;
-    container.innerHTML = '';
-    if(!activeAlarmsArray.length) { container.innerHTML = '<p class="text-gray-400 italic">No reminders set.</p>'; return; }
+    if(!container) return; container.innerHTML = '';
     activeAlarmsArray.forEach((alarm, i) => {
-        container.innerHTML += `<div class="flex justify-between items-center p-2 bg-purple-50 rounded text-purple-900 border border-purple-100"><span>🔔 <strong>${alarm.time}</strong> - ${alarm.label}</span><button onclick="deleteAlarm(${i})" class="text-red-500 font-bold">✕</button></div>`;
+        container.innerHTML += `<div style="display:flex; justify-content:space-between; background:#faf5ff; padding:8px; border-radius:4px; margin-top:4px; font-size:12px; border:1px solid #f3e8ff;"><span>🔔 <strong>${alarm.time}</strong> - ${alarm.label}</span><button onclick="deleteAlarm(${i})" style="width:auto; margin:0; padding:2px 6px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer;">✕</button></div>`;
     });
 }
+function deleteAlarm(i) { activeAlarmsArray.splice(i,1); localStorage.setItem('healthAlarms', JSON.stringify(activeAlarmsArray)); renderAlarmsList(); }
 
-function deleteAlarm(i) { activeAlarmsArray.splice(i, 1); localStorage.setItem('healthAlarms', JSON.stringify(activeAlarmsArray)); renderAlarmsList(); }
+// 10. Master Layout Sync Refresh Engine
+function updateDashboardView() {
+    const logs = JSON.parse(localStorage.getItem('healthLogs')) || [];
+    const tbody = document.getElementById('logTableBody');
+    if(tbody) {
+        tbody.innerHTML = logs.length ? '' : '<tr><td colspan="5" style="padding:10px; text-align:center; color:#9ca3af;">No health metrics recorded yet.</td></tr>';
+        logs.forEach(log => {
+            tbody.innerHTML += `<tr><td>${log.dateStr} | ${log.timeStr}</td><td><strong>${log.bmi}</strong></td><td>${log.bp}</td><td>${log.sugarNum ? log.sugarNum + ' mg/dL' : '—'}</td><td>${log.pulseNum ? log.pulseNum + ' BPM' : '—'}</td></tr>`;
+        });
+    }
 
-setInterval(() => {
-    const currentClockTime = new Date().toTimeString().slice(0,5);
-    activeAlarmsArray.forEach(alarm => {
-        if(alarm.time === currentClockTime && !alarm.triggered) {
-            const soundElement = document.getElementById('alarmSound');
-            if (soundElement) {
-                soundElement.play().catch(e => console.log("Audio awaiting gesture."));
-            }
+    const expenses = JSON.parse(localStorage.getItem('healthExpenses')) || [];
+    const expTbody = document.getElementById('expenseTableBody');
+    if(expTbody) {
+        let outlay = 0; expTbody.innerHTML = expenses.length ? '' : '<tr><td colspan="3" style="padding:10px; text-align:center; color:#9ca3af;">No expense entries saved yet.</td></tr>';
+        expenses.forEach(e => { outlay += parseFloat(e.cost); expTbody.innerHTML += `<tr><td>${e.dateStr}</td><td>${e.label}</td><td><strong>$${e.cost}</strong></td></tr>`; });
+        const outlayLabel = document.getElementById('totalExpenseVal');
+        if(outlayLabel) outlayLabel.innerText = `$${outlay.toFixed(2)}`;
+    }
+
+    const diets = JSON.parse(localStorage.getItem('healthDiets')) || [];
+    const dietTbody = document.getElementById('dietTableBody');
+    if(dietTbody) {
+        dietTbody.innerHTML = diets.length ? '' : '<tr><td colspan="3" style="padding:10px; text-align:center; color:#9ca3af;">No nutrition logs entries saved yet.</td></tr>';
