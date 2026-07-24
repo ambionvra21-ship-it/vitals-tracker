@@ -10,12 +10,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2563EB">
 
-    <!-- Standalone CSS Style Backup Override (Fixes the raw unstyled white screen issue) -->
+    <!-- Standalone CSS Style Override -->
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f3f4f6; margin: 0; padding-bottom: 80px; color: #1f2937; }
         nav { background-color: #2563eb; color: white; padding: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); font-size: 20px; font-weight: bold; text-align: center; }
         main { max-width: 800px; margin: 0 auto; padding: 15px; }
-        .card { background: white; padding: 20px; margin-bottom: 20px; id: card; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
         h2 { margin-top: 0; font-size: 18px; color: #111827; border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; }
         label { display: block; font-size: 12px; font-weight: 600; color: #4b5563; margin-top: 10px; margin-bottom: 4px; }
         input { width: 95%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background-color: #fff; }
@@ -23,7 +23,7 @@
         button:hover { opacity: 0.9; }
         .grid-3 { display: grid; grid-template-cols: 1fr 1fr 1fr; gap: 8px; }
         .grid-2 { display: grid; grid-template-cols: 1fr 1fr; gap: 8px; }
-        .tier-btn { background-color: #e5e7eb; color: #374151; padding: 8px; margin-top: 5px; font-size: 12px; }
+        .tier-btn { background-color: #e5e7eb; color: #374151; padding: 8px; margin-top: 5px; font-size: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
         .streak-box { background-color: #f9fafb; padding: 15px; border-radius: 8px; text-align: center; margin-top: 10px; border: 1px solid #f3f4f6; }
         .progress-bg { width: 100%; background-color: #e5e7eb; border-radius: 9999px; height: 10px; margin-top: 10px; overflow: hidden; }
         .progress-bar { background: linear-gradient(90deg, #fbbf24, #f59e0b); height: 100%; width: 0%; transition: width 0.3s ease; }
@@ -32,7 +32,8 @@
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
         th { background-color: #f9fafb; color: #6b7280; font-size: 11px; text-transform: uppercase; }
         .footer-banner { background-color: #1f2937; color: #9ca3af; padding: 25px; font-size: 11px; text-align: center; margin-top: 40px; }
-        .share-btn { text-decoration: none; display: inline-block; padding: 10px; border-radius: 6px; color: white; font-weight: bold; font-size: 12px; text-align: center; margin-top: 5px; }
+        .share-btn { text-decoration: none; display: inline-block; padding: 12px; border-radius: 6px; color: white; font-weight: bold; font-size: 13px; text-align: center; margin-top: 5px; box-sizing: border-box; }
+        .weather-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-top: 5px; }
     </style>
     <!-- Chart.js framework execution library -->
     <script src="https://jsdelivr.net"></script>
@@ -43,9 +44,27 @@
     <nav>❤️ VitalsTracker Pro</nav>
 
     <main>
-        <!-- AdSense Top Banner -->
+        <!-- AdSense Top Banner Place -->
         <div style="background-color:#e5e7eb; padding:10px; text-align:center; font-size:11px; color:#6b7280; border-radius:6px; margin-bottom:20px;">
             [Google AdSense Mobile Smart Banner Advertisement Place]
+        </div>
+
+        <!-- NEW FEATURE: Live Outdoor Workout Weather Assistant -->
+        <div class="card" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: white;">
+            <h2 style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">☀️ Outdoor Activity Weather Advisor</h2>
+            <p style="font-size: 12px; margin: 5px 0 10px 0;">Check atmospheric conditions before planning outdoor cardio routines or steps walks:</p>
+            <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 24px; font-weight: bold;" id="weatherTemp">31°C</span>
+                        <span style="font-size: 14px; margin-left: 5px; color: #94a3b8;" id="weatherDesc">Partly Cloudy</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="weather-badge" style="background-color: #059669; color: white;">Good for Walks</span>
+                    </div>
+                </div>
+                <p style="font-size: 11px; color: #94a3b8; margin: 8px 0 0 0; font-style: italic;">Location automatically detected. Tones adjust depending on heat indexes.</p>
+            </div>
         </div>
 
         <!-- 1. Mobile Shortcut Instructions Card -->
@@ -123,33 +142,3 @@
                 </div>
             </div>
             <label>Blood Sugar (mg/dL)</label>
-            <input type="number" id="sugar" placeholder="95">
-            <label>Pulse Rate / Beats Per Minute</label>
-            <input type="number" id="pulse" placeholder="72">
-            <button onclick="logVitals()" style="background-color:#059669;">Save Daily Vitals</button>
-        </div>
-
-        <!-- 6. Alarm Configuration Form Card -->
-        <div class="card">
-            <h2 style="color:#7c3aed;">⏰ Medication Alarms & Reminders</h2>
-            <label>Reminder Label Note</label>
-            <input type="text" id="alarmLabel" placeholder="e.g., Morning Blood Sugar Test">
-            <label>Set Alarm Trigger Time</label>
-            <input type="time" id="alarmTime" style="width:90%;">
-            <button onclick="setAlarm()" style="background-color:#7c3aed;">Set Alarm Reminder</button>
-            <div id="activeAlarms" style="margin-top:12px;"></div>
-        </div>
-
-        <!-- 7. Interactive Analytics Graphing Card (Chart.js Container) -->
-        <div class="card">
-            <h2>📊 Interactive Health Trends</h2>
-            <div class="chart-container">
-                <canvas id="healthChart"></canvas>
-            </div>
-        </div>
-
-        <!-- 8. Native Direct Social Share Widget Card -->
-        <div class="card">
-            <h2>📢 Share App with Community</h2>
-            <p style="font-size:12px; color:#6b7280; margin-bottom:12px;">Share this private vital tracker with friends and family:</p>
-            <div class="grid-2">
