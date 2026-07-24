@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitalsTracker - Free BMI & Health Monitor</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- Google AdSense Placeholder (Replace with your actual ad code later) -->
+    <script async src="https://googlesyndication.com" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- Header Navigation -->
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-tight">❤️ VitalsTracker</h1>
+            <p class="text-sm italic">Your Private Health Dashboard</p>
+        </div>
+    </nav>
+
+    <!-- Ad Space Top -->
+    <div class="max-w-4xl mx-auto my-4 p-2 bg-gray-200 text-center text-xs text-gray-500 rounded border">
+        [Google AdSense Banner Advertisement Space]
+    </div>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-6xl mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- COLUMN 1: Tools & Inputs -->
+        <div class="space-y-6 md:col-span-1">
+            <!-- BMI Calculator Tool -->
+            <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
+                <h2 class="text-xl font-semibold text-blue-600 mb-4">Calculate BMI</h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500">Weight (kg)</label>
+                        <input type="number" id="weight" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 70">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500">Height (cm)</label>
+                        <input type="number" id="height" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 175">
+                    </div>
+                    <button onclick="calculateBMI()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition">Compute BMI</button>
+                    <div id="bmiResult" class="mt-4 p-3 bg-gray-50 rounded-md text-center hidden">
+                        <p class="text-sm text-gray-600">Your BMI: <span id="bmiValue" class="font-bold text-lg text-gray-900">0.0</span></p>
+                        <p id="bmiStatus" class="text-xs font-semibold mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vital Signs Logger Form -->
+            <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
+                <h2 class="text-xl font-semibold text-emerald-600 mb-4">Log Vitals</h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500">Blood Pressure (e.g. 120/80)</label>
+                        <input type="text" id="bp" class="w-full mt-1 p-2 border rounded-md" placeholder="Sys/Dia">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500">Blood Sugar (mg/dL)</label>
+                        <input type="number" id="sugar" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 95">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500">Pulse / Heart Rate (BPM)</label>
+                        <input type="number" id="pulse" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 72">
+                    </div>
+                    <button onclick="logVitals()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-md transition">Save to My Browser</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 2 & 3: Personal Tracking History -->
+        <div class="md:col-span-2 space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow border border-gray-100 min-h-[400px]">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Your Health Log History</h2>
+                    <button onclick="clearLogs()" class="text-xs text-red-500 hover:underline">Clear Local History</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b bg-gray-50 text-xs font-medium text-gray-500 tracking-wider">
+                                <th class="p-3">Date/Time</th>
+                                <th class="p-3">BMI Score</th>
+                                <th class="p-3">BP (Sys/Dia)</th>
+                                <th class="p-3">Sugar</th>
+                                <th class="p-3">Pulse Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logTableBody" class="text-sm divide-y text-gray-600">
+                            <!-- User logs inject dynamically here via javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Ad Space Bottom Content -->
+            <div class="p-2 bg-gray-200 text-center text-xs text-gray-500 rounded border">
+                [Google AdSense In-Article Advertisement Space]
+            </div>
+        </div>
+    </main>
+
+    <!-- Medical Disclaimer Footer (Mandatory for AdSense Approval) -->
+    <footer class="bg-gray-800 text-gray-400 mt-12 py-8 text-xs">
+        <div class="max-w-6xl mx-auto px-4 text-center space-y-3">
+            <p class="font-semibold text-gray-300">MEDICAL DISCLAIMER</p>
+            <p>The information, tools, and calculators provided on VitalsTracker are strictly for educational and self-monitoring purposes. This app does not provide medical diagnoses, treatment advice, or prescriptions. Always consult a certified medical practitioner or physician before making changes to your diet, medication, or exercise regimes.</p>
+            <p class="pt-4 text-gray-500">&copy; 2026 VitalsTracker. All user health data remains securely stored in your local browser storage and is never uploaded onto our servers.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
