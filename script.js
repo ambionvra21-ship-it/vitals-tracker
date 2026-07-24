@@ -102,7 +102,7 @@ function logExpense() {
     updateDashboardView();
 }
 
-// 7. Habit Streak System Tiers
+// 7. Habit Streak System Tiers (FIXED: Explicit Array Variable Included)
 function setChallengeTier(days) {
     targetChallengeTier = days;
     localStorage.setItem('challengeTier', days);
@@ -180,7 +180,7 @@ function renderAlarmsList() {
     const container = document.getElementById('activeAlarms');
     if(!container) return; container.innerHTML = '';
     activeAlarmsArray.forEach((alarm, i) => {
-        container.innerHTML += `<div style="display:flex; justify-content:space-between; background:#faf5ff; padding:8px; border-radius:4px; margin-top:4px; font-size:12px; border:1px solid #f3e8ff;"><span>🔔 <strong>${alarm.time}</strong> - ${alarm.label}</span><button onclick="deleteAlarm(${i})" style="width:auto; margin:0; padding:2px 6px; background:#ef4444; border:none; color:white; border-radius:4px; cursor:pointer;">✕</button></div>`;
+        container.innerHTML += `<div style="display:flex; justify-content:space-between; background:#faf5ff; padding:8px; border-radius:4px; margin-top:4px; font-size:12px; border:1px solid #f3e8ff;"><span>🔔 <strong>${alarm.time}</strong> - ${alarm.label}</span><button onclick="deleteAlarm(${i})" style="width:auto; margin:0; padding:2px 6px; background:#ef4444; border:none; color:white; border-radius:4px;">✕</button></div>`;
     });
 }
 function deleteAlarm(i) { activeAlarmsArray.splice(i,1); localStorage.setItem('healthAlarms', JSON.stringify(activeAlarmsArray)); renderAlarmsList(); }
