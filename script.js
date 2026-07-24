@@ -102,21 +102,25 @@ function logExpense() {
     updateDashboardView();
 }
 
-// 7. Habit Streak System Tiers (FIXED: Explicit Array Variable Included)
+// 7. Habit Streak System Tiers (FIXED Syntax Error Array Binding)
 function setChallengeTier(days) {
     targetChallengeTier = days;
     localStorage.setItem('challengeTier', days);
-    [30, 60, 90].forEach(d => {
+    
+    let tiers =;
+    tiers.forEach(d => {
         const btn = document.getElementById(`tierBtn${d}`);
         if(btn) {
             btn.style.backgroundColor = d === days ? '#f59e0b' : '#e5e7eb';
             btn.style.color = d === days ? 'white' : '#374151';
         }
     });
-    document.getElementById('targetTierLabel').innerText = `${days} Days`;
+    const labelEl = document.getElementById('targetTierLabel');
+    if (labelEl) labelEl.innerText = `${days} Days`;
     updateChallengeStreak();
 }
 
+// 8. Streak Logic Counter
 function updateChallengeStreak() {
     const logs = JSON.parse(localStorage.getItem('healthLogs')) || [];
     const countEl = document.getElementById('streakCount');
@@ -129,7 +133,7 @@ function updateChallengeStreak() {
     progressEl.style.width = `${Math.min((streak / targetChallengeTier) * 100, 100)}%`;
 }
 
-// 8. Render Calendar Visuals
+// 9. Render Calendar Visuals
 function renderCalendar() {
     const grid = document.getElementById('calendarGrid');
     const label = document.getElementById('calendarMonthLabel');
@@ -148,7 +152,7 @@ function renderCalendar() {
     }
 }
 
-// 9. Trendline Graphs Analytics
+// 10. Trendline Graphs Analytics
 function renderChart() {
     const logs = [...(JSON.parse(localStorage.getItem('healthLogs')) || [])].reverse();
     const canvas = document.getElementById('healthChart');
@@ -168,7 +172,7 @@ function renderChart() {
     });
 }
 
-// 10. Alarm Reminders Controls
+// 11. Alarm Reminders Controls
 function setAlarm() {
     const time = document.getElementById('alarmTime').value;
     if (!time) { alert("Please provide an alarm trigger time."); return; }
@@ -180,7 +184,7 @@ function renderAlarmsList() {
     const container = document.getElementById('activeAlarms');
     if(!container) return; container.innerHTML = '';
     activeAlarmsArray.forEach((alarm, i) => {
-        container.innerHTML += `<div style="display:flex; justify-content:space-between; background:#faf5ff; padding:8px; border-radius:4px; margin-top:4px; font-size:12px; border:1px solid #f3e8ff;"><span>🔔 <strong>${alarm.time}</strong> - ${alarm.label}</span><button onclick="deleteAlarm(${i})" style="width:auto; margin:0; padding:2px 6px; background:#ef4444; border:none; color:white; border-radius:4px;">✕</button></div>`;
+        container.innerHTML += `<div style="display:flex; justify-content:space-between; background:#faf5ff; padding:8px; border-radius:4px; margin-top:4px; font-size:12px; border:1px solid #f3e8ff;"><span>🔔 <strong>${alarm.time}</strong> - ${alarm.label}</span><button onclick="deleteAlarm(${i})" style="width:auto; margin:0; padding:2px 6px; background:#ef4444; border:none; color:white; border-radius:4px; cursor:pointer;">✕</button></div>`;
     });
 }
 function deleteAlarm(i) { activeAlarmsArray.splice(i,1); localStorage.setItem('healthAlarms', JSON.stringify(activeAlarmsArray)); renderAlarmsList(); }
@@ -190,15 +194,14 @@ setInterval(() => {
     activeAlarmsArray.forEach(alarm => {
         if(alarm.time === currentClockTime && !alarm.triggered) {
             const audio = document.getElementById('alarmSound');
-            if(audio) audio.play().catch(e => console.log('Audio pending touch activation gesture context.'));
+            if(audio) audio.play().catch(e => console.log('Audio waiting for touch activation...'));
             alert(`⏰ REMINDER: ${alarm.label}`); alarm.triggered = true;
         }
         if(alarm.time !== currentClockTime) { alarm.triggered = false; }
     });
 }, 1000);
 
-// 11. Social Sharing Utilities
+// 12. Social Sharing Utilities
 function sharePlatform(p) {
     const pageUrl = encodeURIComponent(window.location.href);
     const text = encodeURIComponent("Track your BMI, health vitals and water tracking goals privately using VitalsTracker Pro!");
-    if(p === 'copy') { navigator.clipboard.writeText(window.location.href); alert("App shortcut URL copied!"); return; }
