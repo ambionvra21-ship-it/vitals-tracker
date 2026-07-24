@@ -15,10 +15,10 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f3f4f6; margin: 0; padding-bottom: 80px; color: #1f2937; }
         nav { background-color: #2563eb; color: white; padding: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); font-size: 20px; font-weight: bold; text-align: center; }
         main { max-width: 800px; margin: 0 auto; padding: 15px; }
-        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; box-sizing: border-box; }
         h2 { margin-top: 0; font-size: 18px; color: #111827; border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; }
         label { display: block; font-size: 12px; font-weight: 600; color: #4b5563; margin-top: 10px; margin-bottom: 4px; }
-        input { width: 95%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background-color: #fff; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background-color: #fff; box-sizing: border-box; }
         button { width: 100%; padding: 12px; margin-top: 12px; background-color: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
         button:hover { opacity: 0.9; }
         .grid-3 { display: grid; grid-template-cols: 1fr 1fr 1fr; gap: 8px; }
@@ -33,7 +33,7 @@
         th { background-color: #f9fafb; color: #6b7280; font-size: 11px; text-transform: uppercase; }
         .footer-banner { background-color: #1f2937; color: #9ca3af; padding: 25px; font-size: 11px; text-align: center; margin-top: 40px; }
         .share-btn { text-decoration: none; display: inline-block; padding: 12px; border-radius: 6px; color: white; font-weight: bold; font-size: 13px; text-align: center; margin-top: 5px; box-sizing: border-box; }
-        .weather-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .water-btn { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: bold; padding: 8px; font-size: 12px; border-radius: 6px; cursor: pointer; text-align: center; margin-top: 5px; }
     </style>
     <!-- Chart.js framework execution library -->
     <script src="https://jsdelivr.net"></script>
@@ -44,40 +44,52 @@
     <nav>❤️ VitalsTracker Pro</nav>
 
     <main>
-        <!-- AdSense Top Banner Place -->
+        <!-- AdSense Top Banner -->
         <div style="background-color:#e5e7eb; padding:10px; text-align:center; font-size:11px; color:#6b7280; border-radius:6px; margin-bottom:20px;">
             [Google AdSense Mobile Smart Banner Advertisement Place]
         </div>
 
-        <!-- NEW FEATURE: Live Outdoor Workout Weather Assistant -->
+        <!-- Outdoor Activity Weather Advisor -->
         <div class="card" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: white;">
             <h2 style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">☀️ Outdoor Activity Weather Advisor</h2>
-            <p style="font-size: 12px; margin: 5px 0 10px 0;">Check atmospheric conditions before planning outdoor cardio routines or steps walks:</p>
             <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <span style="font-size: 24px; font-weight: bold;" id="weatherTemp">31°C</span>
-                        <span style="font-size: 14px; margin-left: 5px; color: #94a3b8;" id="weatherDesc">Partly Cloudy</span>
+                        <span style="font-size: 24px; font-weight: bold;">31°C</span>
+                        <span style="font-size: 14px; margin-left: 5px; color: #94a3b8;">Partly Cloudy</span>
                     </div>
-                    <div style="text-align: right;">
-                        <span class="weather-badge" style="background-color: #059669; color: white;">Good for Walks</span>
+                    <div>
+                        <span style="background-color: #059669; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">Good for Walks</span>
                     </div>
                 </div>
-                <p style="font-size: 11px; color: #94a3b8; margin: 8px 0 0 0; font-style: italic;">Location automatically detected. Tones adjust depending on heat indexes.</p>
             </div>
         </div>
 
-        <!-- 1. Mobile Shortcut Instructions Card -->
+        <!-- Mobile Shortcut Instructions Card -->
         <div class="card" style="background: linear-gradient(135deg, #2563eb, #4f46e5); color: white;">
             <h2 style="color: white; border-bottom: 1px solid rgba(255,255,255,0.2);">📱 Install as Mobile App</h2>
-            <p style="font-size: 12px; margin: 5px 0 10px 0;">Run this tracking platform layout full-screen on your phone:</p>
             <div style="font-size: 11px; line-height: 1.5; opacity: 0.95;">
-                <p><strong>Android/Chrome:</strong> Tap the 3-dots panel menu ➔ Select "Add to Home Screen".</p>
-                <p><strong>iPhone/Safari:</strong> Tap the bottom Share icon ➔ Select "Add to Home Screen".</p>
+                <p><strong>Android/Chrome:</strong> Tap 3-dots ➔ "Add to Home Screen".</p>
+                <p><strong>iPhone/Safari:</strong> Tap Share icon ➔ "Add to Home Screen".</p>
             </div>
         </div>
 
-        <!-- 2. Streak Logging Challenge Card -->
+        <!-- NEW FEATURE: Standard Health Target Reference Reference Guides -->
+        <div class="card" style="background-color: #fffbeb; border: 1px solid #fde68a;">
+            <h2 style="color: #b45309; border-bottom: 2px solid #fef3c7;">📋 Healthy Vitals Target Reference Reference</h2>
+            <div style="font-size: 12px; line-height: 1.6; color: #78350f;" class="grid-2">
+                <div>
+                    <p>• <strong>BMI Index:</strong> Normal Range (18.5 - 24.9)</p>
+                    <p>• <strong>Blood Pressure:</strong> Less than 120/80 mmHg</p>
+                </div>
+                <div>
+                    <p>• <strong>Fasting Blood Sugar:</strong> 70 - 99 mg/dL</p>
+                    <p>• <strong>Resting Pulse Rate:</strong> 60 - 100 Beats/Min</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Streak Logging Challenge Card -->
         <div class="card">
             <h2 style="color:#d97706;">🏆 Multi-Tier Logging Challenge</h2>
             <div class="grid-3">
@@ -86,26 +98,37 @@
                 <button onclick="setChallengeTier(90)" id="tierBtn90" class="tier-btn">90 Days</button>
             </div>
             <div class="streak-box">
-                <div style="font-size:12px; color:#6b7280; display:flex; justify-content:space-between;">
-                    <span>Current Habit Streak</span>
-                    <span>Target Goal</span>
+                <div style="display:flex; justify-content:space-between; font-size:12px; color:#6b7280;">
+                    <span>Current Streak</span><span>Target Goal</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:5px;">
                     <span style="font-size:28px; font-weight:800; color:#f59e0b;" id="streakCount">0 <span style="font-size:14px; font-weight:400; color:#9ca3af;">days 🔥</span></span>
                     <span style="font-size:14px; font-weight:700; color:#4b5563;" id="targetTierLabel">30 Days</span>
                 </div>
-                <div class="progress-bg">
-                    <div id="streakProgress" class="progress-bar"></div>
-                </div>
-                <p id="challengeMilestone" style="font-size:11px; color:#9ca3af; margin: 8px 0 0 0; font-style:italic;">Log entries daily to keep your habit streak alive.</p>
+                <div class="progress-bg"><div id="streakProgress" class="progress-bar"></div></div>
+                <p id="challengeMilestone" style="font-size:11px; color:#9ca3af; margin-top:8px; font-style:italic;">Log entries daily to keep your habit streak alive.</p>
             </div>
         </div>
 
-        <!-- 3. Health Expenses Tracker Card -->
+        <!-- NEW FEATURE: Water Hydration Logging Monitor -->
+        <div class="card">
+            <h2 style="color: #0284c7;">💧 Daily Water Hydration Tracker</h2>
+            <p style="font-size: 12px; color: #6b7280; margin-bottom: 10px;">Medical guidance recommends approx. 2,000ml - 3,000ml target fluid balances daily.</p>
+            <div class="grid-3">
+                <div class="water-btn" onclick="addWater(250)">+250 ml (Glass)</div>
+                <div class="water-btn" onclick="addWater(500)">+500 ml (Bottle)</div>
+                <div class="water-btn" onclick="addWater(1000)">+1.0 Liter</div>
+            </div>
+            <div style="background-color: #f0f9ff; padding: 12px; border-radius: 8px; text-align: center; margin-top: 12px; border: 1px solid #e0f2fe;">
+                <p style="margin:0; font-size:13px; font-weight:600; color:#0369a1;">Total Logged Today: <span id="totalWaterLabel" style="font-size:16px; font-weight:800;">0 ml</span></p>
+            </div>
+        </div>
+
+        <!-- Health Expenses Tracker Card -->
         <div class="card">
             <h2 style="color:#4f46e5;">💵 Health Expense Tracker</h2>
             <label>Expense Description</label>
-            <input type="text" id="expLabel" placeholder="e.g., Blood Pressure Medication, Checkup">
+            <input type="text" id="expLabel" placeholder="Medication, Checkup">
             <label>Cost Value</label>
             <input type="number" id="expCost" placeholder="0.00">
             <button onclick="logExpense()" style="background-color:#4f46e5;">Save Expense Item</button>
@@ -114,31 +137,5 @@
             </div>
         </div>
 
-        <!-- 4. Calculator Fields Component Card -->
+        <!-- NEW FEATURE: Dietary & Calorie Log intake manager form -->
         <div class="card">
-            <h2 style="color:#2563eb;">🧮 Compute Body Mass Index</h2>
-            <label>Weight (kg)</label>
-            <input type="number" id="weight" placeholder="e.g., 70">
-            <label>Height (cm)</label>
-            <input type="number" id="height" placeholder="e.g., 175">
-            <button onclick="calculateBMI()" style="background-color:#2563eb;">Calculate BMI</button>
-            <div id="bmiResult" style="margin-top:15px; padding:10px; background-color:#f9fafb; border-radius:6px; text-align:center; display:none;">
-                <p style="margin:0; font-size:14px;">Your BMI Score: <span id="bmiValue" style="font-weight:bold; font-size:16px;">0.0</span></p>
-                <p id="bmiStatus" style="margin:4px 0 0 0; font-size:12px; font-weight:bold;"></p>
-            </div>
-        </div>
-
-        <!-- 5. Vital Sign Intake Form Card -->
-        <div class="card">
-            <h2 style="color:#059669;">📝 Record Daily Vital Signs</h2>
-            <div class="grid-2">
-                <div>
-                    <label>BP Systolic (Top)</label>
-                    <input type="number" id="bpSys" placeholder="120">
-                </div>
-                <div>
-                    <label>BP Diastolic (Bottom)</label>
-                    <input type="number" id="bpDia" placeholder="80">
-                </div>
-            </div>
-            <label>Blood Sugar (mg/dL)</label>
