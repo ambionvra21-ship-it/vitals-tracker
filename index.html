@@ -3,70 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VitalsTracker Pro - Mobile Health Hub</title>
+    <title>VitalsTracker Pro - Ultimate Mobile Hub</title>
     
     <!-- Mobile App Settings (PWA Meta Tags) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2563EB">
-    <link rel="manifest" href="data:application/json;base64,ewogICJhbWUiOiAiVml0YWxzVHJhY2tlciBQcm8iLAogICJzaG9ydF9uYW1lIjogIlZpdGFsc1RyYWNrZXIiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI0Y5RkFGIiwKICAidGhlbWVfY29sb3IiOiAiIzI1NjNFQiIKfQ==">
+    <link rel="manifest" href="data:application/json;base64,ewogICJhbWUiOiAiVml0YWxzVHJhY2tlciBQcm8iLCogICJzaG9ydF9uYW1lIjogIlZpdGFsc1RyYWNrZXIiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI0Y5RkFGIiwKICAidGhlbWVfY29sb3IiOiAiIzI1NjNFQiIKfQ==">
 
-    <!-- Tailwind CSS Standard Stylesheet (Using a highly stable fallback link) -->
-    <link href="https://cloudflare.com" rel="stylesheet">
-    <!-- Chart.js for mobile analytics -->
+    <!-- Tailwind CSS Standard Stylesheet (Using JSDelivr direct network fallback link) -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <!-- Chart.js for analytics -->
     <script src="https://jsdelivr.net"></script>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800 select-none pb-20 lg:pb-0">
+<body class="bg-gray-50 font-sans text-gray-800 pb-20">
 
     <!-- Header Navigation -->
     <nav class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-tight flex items-center">❤️ VitalsTracker Pro</h1>
-            <span class="text-xs bg-blue-700 px-2 py-1 rounded-full border border-blue-400 font-mono">v1.2 Mobile</span>
+            <h1 class="text-xl font-bold tracking-tight">❤️ VitalsTracker Pro</h1>
+            <span class="text-xs bg-blue-700 px-2 py-1 rounded-full border border-blue-400 font-mono">v1.3 Ultra</span>
         </div>
     </nav>
 
     <!-- Ad Space Top Banner -->
     <div class="max-w-7xl mx-auto my-3 p-2 bg-gray-200 text-center text-xs text-gray-500 rounded border">
+        <!-- ADSENSE SLOT 1: Copy-paste your top banner ad code right here -->
         [Google AdSense Mobile Smart Banner Advertisement]
     </div>
 
     <!-- Main Content Layout Grid -->
     <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <!-- COLUMN 1: Calculators & Mobile App Install Guide -->
+        <!-- COLUMN 1: Calculators, Challenges & Expenses -->
         <div class="space-y-6">
             
-            <!-- APP INSTALL INSTRUCTION SECTION -->
+            <!-- Mobile App Install Instructions -->
             <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-5 rounded-xl shadow-lg text-white">
-                <h2 class="text-lg font-bold mb-2 flex items-center">📱 Install as a Mobile App</h2>
-                <p class="text-xs text-blue-100 mb-4">Run this tool full-screen on your phone without an app store.</p>
-                <div class="space-y-2 text-xs border-t border-blue-500 pt-3">
-                    <p class="flex items-center"><strong>Android/Chrome:</strong>&nbsp;Tap the three dots icon (top right) ➔ Select "Install App" or "Add to Home Screen".</p>
-                    <p class="flex items-center"><strong>iPhone/Safari:</strong>&nbsp;Tap the Share button (bottom menu) ➔ Scroll down and select "Add to Home Screen".</p>
+                <h2 class="text-lg font-bold mb-1">📱 Install Mobile Shortcut</h2>
+                <p class="text-xs text-blue-100 mb-3">Add this app to your smartphone screen full-screen without an app store.</p>
+                <div class="text-xs border-t border-blue-500 pt-2 space-y-1">
+                    <p><strong>Android/Chrome:</strong> Tap the 3-dots ➔ Select "Add to Home Screen".</p>
+                    <p><strong>iPhone/Safari:</strong> Tap the Share icon ➔ Select "Add to Home Screen".</p>
                 </div>
             </div>
 
-            <!-- Health Monthly Challenge Section -->
+            <!-- Health Challenge Milestone Selector Tier System -->
             <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                <h2 class="text-xl font-semibold text-yellow-600 mb-2 flex items-center">🏆 30-Day Vitals Streak Challenge</h2>
-                <p class="text-xs text-gray-400 mb-4">Build life-saving self-monitoring habits. Log your metrics daily to keep your fire lit!</p>
+                <h2 class="text-xl font-semibold text-yellow-600 mb-2">🏆 Multi-Tier Logging Challenge</h2>
+                <p class="text-xs text-gray-400 mb-4">Select your baseline goal to establish lifelong health habits.</p>
                 
-                <div class="bg-gray-50 p-4 rounded-lg text-center space-y-3">
-                    <div class="flex justify-between items-center text-xs px-1 font-semibold text-gray-500">
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <button onclick="setChallengeTier(30)" id="tierBtn30" class="py-1 px-2 rounded text-xs font-bold bg-yellow-500 text-white shadow-sm">30 Days</button>
+                    <button onclick="setChallengeTier(60)" id="tierBtn60" class="py-1 px-2 rounded text-xs font-bold bg-gray-200 text-gray-700 hover:bg-gray-300">60 Days</button>
+                    <button onclick="setChallengeTier(90)" id="tierBtn90" class="py-1 px-2 rounded text-xs font-bold bg-gray-200 text-gray-700 hover:bg-gray-300">90 Days</button>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg text-center space-y-2">
+                    <div class="flex justify-between items-center text-xs font-semibold text-gray-500">
                         <span>Current Streak</span>
-                        <span>Monthly Goal</span>
+                        <span>Active Tier Goal</span>
                     </div>
-                    <div class="flex justify-between items-baseline px-1">
-                        <span class="text-3xl font-extrabold text-yellow-500 flex items-center" id="streakCount">0 <span class="text-sm font-normal text-gray-400 ml-1">days 🔥</span></span>
-                        <span class="text-sm font-bold text-gray-600">30 Days</span>
+                    <div class="flex justify-between items-baseline">
+                        <span class="text-3xl font-extrabold text-yellow-500" id="streakCount">0 <span class="text-sm font-normal text-gray-400 ml-1">days 🔥</span></span>
+                        <span class="text-sm font-bold text-gray-600" id="targetTierLabel">30 Days</span>
                     </div>
-                    
-                    <!-- Progress Bar Component -->
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div id="streakProgress" class="bg-gradient-to-r from-yellow-400 to-orange-500 h-2.5 rounded-full" style="width: 0%"></div>
                     </div>
-                    <p id="challengeMilestone" class="text-xs italic text-gray-500 pt-1">Log your first vital metrics entry to spark your streak tracker.</p>
+                    <p id="challengeMilestone" class="text-xs italic text-gray-500 pt-1">Log health metrics to start.</p>
+                </div>
+            </div>
+
+            <!-- Health Expense Tracking Hub -->
+            <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
+                <h2 class="text-xl font-semibold text-indigo-600 mb-4">💵 Health Expense Tracker</h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500">Expense Item Label</label>
+                        <input type="text" id="expLabel" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="e.g. Insulin, Doctor Consultation">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500">Cost Value ($ or Local Currency)</label>
+                        <input type="number" id="expCost" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="e.g. 45.00">
+                    </div>
+                    <button onclick="logExpense()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition text-sm shadow-sm">Save Expense</button>
+                    
+                    <!-- Total Budget Alert Banner -->
+                    <div class="mt-3 p-2 bg-indigo-50 border border-indigo-100 rounded text-center">
+                        <p class="text-xs text-indigo-900 font-semibold">Total Month Outlay: <span id="totalExpenseVal" class="text-sm text-indigo-600 font-bold">$0.00</span></p>
+                    </div>
                 </div>
             </div>
 
@@ -76,13 +102,13 @@
                 <div class="space-y-3">
                     <div>
                         <label class="block text-xs font-medium text-gray-500">Weight (kg)</label>
-                        <input type="number" id="weight" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 70">
+                        <input type="number" id="weight" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="70">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-500">Height (cm)</label>
-                        <input type="number" id="height" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 175">
+                        <input type="number" id="height" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="175">
                     </div>
-                    <button onclick="calculateBMI()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition shadow-sm">Compute BMI</button>
+                    <button onclick="calculateBMI()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition text-sm shadow-sm">Compute BMI</button>
                     <div id="bmiResult" class="mt-4 p-3 bg-gray-50 rounded-md text-center hidden">
                         <p class="text-sm text-gray-600">Your BMI: <span id="bmiValue" class="font-bold text-lg text-gray-900">0.0</span></p>
                         <p id="bmiStatus" class="text-xs font-semibold mt-1"></p>
@@ -97,22 +123,22 @@
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-medium text-gray-500">BP Systolic</label>
-                            <input type="number" id="bpSys" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 120">
+                            <input type="number" id="bpSys" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="120">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-500">BP Diastolic</label>
-                            <input type="number" id="bpDia" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 80">
+                            <input type="number" id="bpDia" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="80">
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-500">Blood Sugar (mg/dL)</label>
-                        <input type="number" id="sugar" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 95">
+                        <input type="number" id="sugar" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="95">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-500">Pulse Rate (BPM)</label>
-                        <input type="number" id="pulse" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 72">
+                        <input type="number" id="pulse" class="w-full mt-1 p-2 border rounded-md text-sm" placeholder="72">
                     </div>
-                    <button onclick="logVitals()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-md transition shadow-sm">Save Entry</button>
+                    <button onclick="logVitals()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-md transition text-sm shadow-sm">Save Entry</button>
                 </div>
             </div>
 
@@ -122,35 +148,3 @@
                 <div class="space-y-3">
                     <div>
                         <label class="block text-xs font-medium text-gray-500">Reminder Label</label>
-                        <input type="text" id="alarmLabel" class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. Check Blood Sugar">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500">Set Alarm Time</label>
-                        <input type="time" id="alarmTime" class="w-full mt-1 p-2 border rounded-md">
-                    </div>
-                    <button onclick="setAlarm()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition shadow-sm">Set Reminder</button>
-                    <div id="activeAlarms" class="mt-3 space-y-2 text-xs"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- COLUMN 2 & 3: Charts, Calendar, Articles, Engagement -->
-        <div class="lg:col-span-2 space-y-6">
-            
-            <!-- Dynamic Charting Area -->
-            <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">📊 Interactive Health Trends</h2>
-                <div class="relative h-64 w-full">
-                    <canvas id="healthChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Calendar & Mini Info Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Activity Calendar -->
-                <div class="bg-white p-6 rounded-xl shadow border border-gray-100">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-lg font-semibold text-gray-800">📅 Activity Calendar</h2>
-                        <span class="text-xs text-emerald-600 font-medium">● Days Logged</span>
-                    </div>
-                    <div id="calendarMonthLabel" class="text-center font-bold text-sm text-gray-600 mb-2"></div>
